@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Context>
+    <Resource
+        name="fastest"
+        author="Container"
+        type="javax.sql.DataSource"
+        maxActive="32"
+        maxIdle="8"
+        maxWait="1000"
+        username="mysql.app"
+        password="56MAdb_!@#good"
+        driverClassName="com.mysql.jdbc.Driver"
+        url="jdbc:mysql://localhost:3306/fastest?autoReconnect=true&amp;useEncoding=true&amp;characterEncoding=UTF-8"
+        useSSL="false"
+    />
+    <!--useUnicode="true"-->
+    <!--characterEncoding="UTF-8"-->
+</Context>
