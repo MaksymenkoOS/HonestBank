@@ -35,4 +35,8 @@ public class User {
     public String getEmail() {
         return email;
     }
+
+    public void setIdInDb(int idInDb) {
+        this.idInDb = idInDb;
+    }
 }

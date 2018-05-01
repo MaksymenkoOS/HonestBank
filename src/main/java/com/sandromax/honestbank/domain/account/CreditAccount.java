@@ -7,7 +7,7 @@ import java.util.LinkedList;
 /**
  * Created by sandro on 26.04.18.
  */
-public class CreditAccount extends Account {
+public class CreditAccount extends Account implements IAccount {
     private double creditLimit;
     private double debt;
     private double accruedInterest;
@@ -15,16 +15,13 @@ public class CreditAccount extends Account {
     private LinkedList<PaymentHistory> paymentHistory;
 
 
-    //    ???
-//    public boolean transfer(String recepient, double sum) {
-//
-//        return true;
-//    }
+    @Override
+    public void transfer(String recepient, Double sum) {
 
-//    ???
-//    public boolean pay(String recepient, double sum) {
-//
-//        return true;
-//    }
+    }
 
+    @Override
+    public void info() {
+
+    }
 }

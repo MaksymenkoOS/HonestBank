@@ -28,4 +28,8 @@ public class Admin {
     public String getEmail() {
         return email;
     }
+
+    public void setIdInDb(int idInDb) {
+        IdInDb = idInDb;
+    }
 }
