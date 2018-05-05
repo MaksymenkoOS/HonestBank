@@ -10,20 +10,19 @@ import javax.servlet.http.HttpServletRequest;
  * Created by sandro on 26.04.18.
  */
 public class Cabinet {
-//    private User user;
-    Account account;
+    private User user;
+//    Account account;
     private Logger logger;
 
     public Cabinet() {
     }
 
-    public Cabinet(Account account, Logger logger) {
-//        this.user = user;
-        this.account = account;
+    public Cabinet(User user, Logger logger) {
+        this.user = user;
+//        this.account = account;
         this.logger = logger;
     }
 
-    public static void info(Account account, User user, HttpServletRequest request) {
-
-    }
+//    public static void info(Account account, User user, HttpServletRequest request) {
+//    }
 }

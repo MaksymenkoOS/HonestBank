@@ -8,13 +8,13 @@ import java.util.LinkedList;
  * Created by sandro on 26.04.18.
  */
 public class DepositAccount extends Account implements IAccount {
-    private double amount;
+//    private double balance;
     private double depositRate;
     private LinkedList<History> replenishmentHistory;
 
 
     @Override
-    public void transfer(String recepient, Double sum) {
+    public void transfer(Double sum, String recepient) {
 
     }
 
