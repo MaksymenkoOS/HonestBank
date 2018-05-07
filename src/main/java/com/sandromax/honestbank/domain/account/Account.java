@@ -12,7 +12,7 @@ import java.util.LinkedList;
 public class Account {
     private int idInDb;
 
-    private String type;
+    private AccountType type;
 
     private User user;
     private double balance;
@@ -40,7 +40,7 @@ public class Account {
      * @param validityTo    end date and time
      * @param rate  credit or deposit rate
      */
-    public Account(String type, User user, double balance, LocalDate validityFrom, LocalDate validityTo, double rate) {
+    public Account(AccountType type, User user, double balance, LocalDate validityFrom, LocalDate validityTo, double rate) {
         this.type = type;
         this.user = user;
         this.balance = balance;
@@ -58,9 +58,8 @@ public class Account {
      * @param validityFrom  date and time of account opening
      * @param validityTo    end date and time
      * @param rate  credit or deposit rate
-     * @param history   list of all transactions
      */
-    public Account(int idInDb, String type, User user, double balance, LocalDate validityFrom, LocalDate validityTo, double rate, LinkedList<Transaction> history) {
+    public Account(int idInDb, AccountType type, User user, double balance, LocalDate validityFrom, LocalDate validityTo, double rate) {
         this.idInDb = idInDb;
         this.type = type;
         this.user = user;
@@ -68,7 +67,6 @@ public class Account {
         this.validityFrom = validityFrom;
         this.validityTo = validityTo;
         this.rate = rate;
-        this.history = history;
     }
 
     /**
@@ -85,7 +83,7 @@ public class Account {
      * Getter type
      * @return  account type name
      */
-    public String getType() {
+    public AccountType getType() {
         return type;
     }
 

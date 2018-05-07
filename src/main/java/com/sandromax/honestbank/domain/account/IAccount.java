@@ -5,7 +5,7 @@ package com.sandromax.honestbank.domain.account;
  */
 public interface IAccount {
 
-    void transfer(Double sum, String recepient);
+    void transfer(Double sum, String recipient);
 
     void info();
 }
