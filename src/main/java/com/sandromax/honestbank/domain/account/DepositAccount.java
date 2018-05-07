@@ -1,6 +1,5 @@
 package com.sandromax.honestbank.domain.account;
 
-import com.sandromax.honestbank.domain.account.history.History;
 
 import java.util.LinkedList;
 
@@ -9,8 +8,8 @@ import java.util.LinkedList;
  */
 public class DepositAccount extends Account implements IAccount {
 //    private double balance;
-    private double depositRate;
-    private LinkedList<History> replenishmentHistory;
+//    private double depositRate;
+//    private LinkedList<History> replenishmentHistory;
 
 
     @Override
