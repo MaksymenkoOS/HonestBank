@@ -6,13 +6,15 @@ import java.util.List;
  * Created by sandro on 26.04.18.
  */
 public interface GenericDao<T> {
-    boolean create(T entity);
+    int create(T entity);
 
     List<T> findAll();
 
     T findById(int id);
 
     T findByName(String name);
+
+    T findBy(String columnName, String value);
 
     boolean update(T entity);
 
