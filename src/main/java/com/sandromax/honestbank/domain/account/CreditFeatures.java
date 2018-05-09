@@ -2,6 +2,7 @@ package com.sandromax.honestbank.domain.account;
 
 public class CreditFeatures {
 
+    private int accountId;
     private double creditLimit;
     private double accruedInterest;
 
@@ -10,6 +11,12 @@ public class CreditFeatures {
     }
 
     public CreditFeatures(double creditLimit, double accruedInterest) {
+        this.creditLimit = creditLimit;
+        this.accruedInterest = accruedInterest;
+    }
+
+    public CreditFeatures(int accountId, double creditLimit, double accruedInterest) {
+        this.accountId = accountId;
         this.creditLimit = creditLimit;
         this.accruedInterest = accruedInterest;
     }
@@ -23,6 +30,10 @@ public class CreditFeatures {
         return accruedInterest;
     }
 
+    public int getAccountId() {
+        return accountId;
+    }
+
 
     public void setCreditLimit(double creditLimit) {
         this.creditLimit = creditLimit;
@@ -30,5 +41,9 @@ public class CreditFeatures {
 
     public void setAccruedInterest(double accruedInterest) {
         this.accruedInterest = accruedInterest;
+    }
+
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
 }

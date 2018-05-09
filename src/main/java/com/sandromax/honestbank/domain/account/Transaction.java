@@ -7,25 +7,25 @@ public class Transaction {
     private LocalDateTime time_stamp;
     private double amount;
     private Account sender;
-    private Account recepient;
+    private Account recipient;
 
 
     public Transaction() {
     }
 
-    public Transaction(LocalDateTime time_stamp, double amount, Account sender, Account recepient) {
+    public Transaction(LocalDateTime time_stamp, double amount, Account sender, Account recipient) {
         this.time_stamp = time_stamp;
         this.amount = amount;
         this.sender = sender;
-        this.recepient = recepient;
+        this.recipient = recipient;
     }
 
-    public Transaction(int idInDb, LocalDateTime time_stamp, double amount, Account sender, Account recepient) {
+    public Transaction(int idInDb, LocalDateTime time_stamp, double amount, Account sender, Account recipient) {
         this.idInDb = idInDb;
         this.time_stamp = time_stamp;
         this.amount = amount;
         this.sender = sender;
-        this.recepient = recepient;
+        this.recipient = recipient;
     }
 
 
@@ -49,7 +49,7 @@ public class Transaction {
         return sender;
     }
 
-    public Account getRecepient() {
-        return recepient;
+    public Account getRecipient() {
+        return recipient;
     }
 }
