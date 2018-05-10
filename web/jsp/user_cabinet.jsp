@@ -12,9 +12,11 @@
 </head>
 <body>
 <h1>Cabinet</h1>
+<div>User: ${user.getName()}</div>
 <a href="/controller?command=deposit_account">Deposit</a>
 <a href="/controller?command=credit_account">Credit</a>
 
-<a href="/controller?command=log_out">Log Out</a>
+<a href="/controller?command=sign_out">Sign Out</a>
+
 </body>
 </html>

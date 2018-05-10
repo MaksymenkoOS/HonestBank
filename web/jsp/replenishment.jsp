@@ -12,9 +12,11 @@
 </head>
 <body>
 <h1>Replenishment</h1>
+<div>User: ${user.getName()}</div>
+
 <a href="/controller?command=replenishment">Confirm refill</a>
 
 <a href="/controller?command=user_cabinet_page">Cabinet</a>
-<a href="/controller?command=log_out">Log Out</a>
+<a href="/controller?command=sign_out">Sign Out</a>
 </body>
 </html>

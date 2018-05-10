@@ -10,6 +10,6 @@ public class CommandAdminSignInPage implements Command {
     public String execute(HttpServletRequest request) {
         String page = Pages.ADMIN_SIGN_IN;
 
-        return null;
+        return page;
     }
 }

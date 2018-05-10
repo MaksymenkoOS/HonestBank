@@ -11,9 +11,30 @@
     <title>Welcome to HonestBank</title>
 </head>
 <body>
-<h1>Hello, I'm a BANK!</h1>
+<h1>Hello, I'm a BANK! HONEST BANK!</h1>
 <a href="/controller?command=user_sign_up_page">User Registration</a>
-<a href="/controller?command=user_sign_in">Enter for users</a>
 <a href="/controller?command=ADMIN_SIGN_IN_PAGE">Enter for Admins</a>
+
+<h1><a href="/controller?command=user_sign_in">Enter for users</a></h1>
+<form action="/controller?command=user_sign_in" method="post">
+    <fieldset class="signin_info">
+        <label>
+            Ваш Email Адрес
+            <input type="email" name="email" placeholder="your@mail.com" required>
+        </label>
+        <label>
+            Ваш пароль
+            <input type="password" name="password" placeholder="5+ символов" required>
+            ${error_message}
+        </label>
+    </fieldset>
+    <fieldset class="signin_action">
+        <input class="btn_fill" type="submit" name="submit" value="Войти">
+        <label class="container">Запомнить
+            <input type="checkbox" checked="checked">
+            <span class="checkmark"></span>
+        </label>
+    </fieldset>
+</form>
 </body>
 </html>
