@@ -105,15 +105,15 @@ public class CreditFeaturesDao implements GenericDao<CreditFeatures> {
         return features;
     }
 
-    @Override
-    public CreditFeatures findByName(String name) {
-        return null;
-    }
-
-    @Override
-    public CreditFeatures findBy(String columnName, String value) {
-        return null;
-    }
+//    @Override
+//    public CreditFeatures findByName(String name) {
+//        return null;
+//    }
+//
+//    @Override
+//    public CreditFeatures findBy(String columnName, String value) {
+//        return null;
+//    }
 
     @Override
     public boolean update(CreditFeatures entity) {

@@ -12,9 +12,9 @@ public interface GenericDao<T> {
 
     T findById(int id);
 
-    T findByName(String name);
-
-    T findBy(String columnName, String value);
+//    T findByName(String name);
+//
+//    T findBy(String columnName, String value);
 
     boolean update(T entity);
 

@@ -2,7 +2,6 @@ package com.sandromax.honestbank.model.dao.impl;
 
 import com.sandromax.honestbank.domain.account.Account;
 import com.sandromax.honestbank.domain.account.AccountType;
-import com.sandromax.honestbank.domain.service.BCrypt;
 import com.sandromax.honestbank.domain.service.log.Logger;
 import com.sandromax.honestbank.domain.user.User;
 import com.sandromax.honestbank.model.dao.GenericDao;
@@ -27,7 +26,8 @@ public class AccountDao implements GenericDao<Account> {
 //    private static final String SQL_FIND_ACCOUNT_BY_NAME = "SELECT * FROM account WHERE name = ?;";
     private static final String SQL_UPDATE_ACCOUNT = "UPDATE account SET type_id = ?, user_id = ?, balance = ?, validity_to = ?, rate = ? WHERE id = ?;";
     private static final String SQL_DELETE_ACCOUNT = "DELETE FROM account WHERE id = ?;";
-    private static final String SQL_FIND_ACCOUNTS_BY_USER_ID = "SELECT * FROM account user_id = ?;";
+    private static final String SQL_FIND_ACCOUNTS_BY_USER_ID = "SELECT * FROM account WHERE user_id = ?;";
+    private static final String SQL_FIND_ACCOUNTS_BY_USER_ID_AND_TYPE_ID = "SELECT * FROM account WHERE user_id = ? AND type_id = ?;";
 
     @Override
     public int create(Account entity) {
@@ -157,18 +157,18 @@ public class AccountDao implements GenericDao<Account> {
 
         return account;
     }
-
-    @Override
-    public Account findByName(String name) {
-        logger.log("method 'AccountDao.findByName(String name)' is not for use");
-        return null;
-    }
-
-    @Override
-    public Account findBy(String columnName, String value) {
-        logger.log("method 'AccountDao.findBy(String columnName, String value)' is not for use");
-        return null;
-    }
+//
+//    @Override
+//    public Account findByName(String name) {
+//        logger.log("method 'AccountDao.findByName(String name)' is not for use");
+//        return null;
+//    }
+//
+//    @Override
+//    public Account findBy(String columnName, String value) {
+//        logger.log("method 'AccountDao.findBy(String columnName, String value)' is not for use");
+//        return null;
+//    }
 
     @Override
     public boolean update(Account entity) {
@@ -237,6 +237,55 @@ public class AccountDao implements GenericDao<Account> {
                 int typeId = resultSet.getInt(2);
                 AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
                 AccountType type = accountTypeDao.findById(typeId);
+
+                double balance = resultSet.getDouble(4);
+
+                LocalDate validityFrom = resultSet.getDate(5).toLocalDate();
+
+                LocalDate validityTo = resultSet.getDate(6).toLocalDate();
+
+                double rate = resultSet.getDouble(7);
+
+                Account account = new Account(idInDb, type, user, balance, validityFrom, validityTo, rate);
+                accounts.add(account);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return accounts;
+    }
+
+    public List<Account> findByUserEmailAndAccountType(String email, AccountType type) {
+        LinkedList<Account> accounts = new LinkedList<>();
+        ResultSet resultSet = null;
+
+        try(Connection connection = ConnectionPool.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_FIND_ACCOUNTS_BY_USER_ID_AND_TYPE_ID)) {
+
+            UserDao userDao = new UserDao(logger);
+            User user = userDao.findByEmail(email);
+            statement.setInt(1, user.getIdInDb());
+
+            AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
+            int typeId = accountTypeDao.findIdByName(type);
+            statement.setInt(2, typeId);
+
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int idInDb = resultSet.getInt(1);
+
+//                int typeId = resultSet.getInt(2);
+//                AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
+//                AccountType type = accountTypeDao.findById(typeId);
 
                 double balance = resultSet.getDouble(4);
 

@@ -83,11 +83,6 @@ public class AdminDao implements GenericDao<Admin> {
     }
 
     @Override
-    public Admin findBy(String columnName, String value) {
-        return null;
-    }
-
-    @Override
     public Admin findById(int id) {
         Admin admin = null;
         ResultSet resultSet = null;
@@ -119,10 +114,15 @@ public class AdminDao implements GenericDao<Admin> {
         return admin;
     }
 
-    @Override
-    public Admin findByName(String name) {
-        return null;
-    }
+//    @Override
+//    public Admin findBy(String columnName, String value) {
+//        return null;
+//    }
+
+//    @Override
+//    public Admin findByName(String name) {
+//        return null;
+//    }
 
     @Override
     public boolean update(Admin entity) {

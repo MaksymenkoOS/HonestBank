@@ -138,21 +138,23 @@ public class TransactionDao implements GenericDao<Transaction> {
 
         return transaction;
     }
+//    @Override
+//    public Transaction findBy(String columnName, String value) {
+//        logger.log("Method 'TransactionDao.findBy(String columnName, String value)' is not for use. " +
+//                "Transaction have no other parameters to find.");
+//        return null;
+//    }
+
+
+//    @Override
+//    public Transaction findByName(String name) {
+//        logger.log("Method 'TransactionDao.findByName(String name)' is not for use. " +
+//                "Transaction haven't name.");
+//        return null;
+//    }
+
+
     //todo Ask: about unused methods from interface
-    @Override
-    public Transaction findByName(String name) {
-        logger.log("Method 'TransactionDao.findByName(String name)' is not for use. " +
-                "Transaction haven't name.");
-        return null;
-    }
-
-    @Override
-    public Transaction findBy(String columnName, String value) {
-        logger.log("Method 'TransactionDao.findBy(String columnName, String value)' is not for use. " +
-                "Transaction have no other parameters to find.");
-        return null;
-    }
-
     @Override
     public boolean update(Transaction entity) {
         logger.log("Method 'TransactionDao.update(Transaction entity)' is not for use. " +

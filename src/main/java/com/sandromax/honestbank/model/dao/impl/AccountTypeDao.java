@@ -96,7 +96,7 @@ public class AccountTypeDao implements GenericDao<AccountType> {
         return type;
     }
 
-        @Override
+//        @Override
     public AccountType findByName(String name) {
             AccountType type = null;
             ResultSet resultSet = null;
@@ -118,10 +118,10 @@ public class AccountTypeDao implements GenericDao<AccountType> {
             return type;
     }
 
-    @Override
-    public AccountType findBy(String columnName, String value) {
-        return null;
-    }
+//    @Override
+//    public AccountType findBy(String columnName, String value) {
+//        return null;
+//    }
 
     @Override
     public boolean update(AccountType entity) {

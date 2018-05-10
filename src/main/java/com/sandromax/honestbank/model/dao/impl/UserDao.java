@@ -123,7 +123,7 @@ public class UserDao implements GenericDao<User> {
         return user;
     }
 
-    @Override
+//    @Override
     public User findByName(String name) {
         User user = null;
         ResultSet resultSet = null;
@@ -156,39 +156,39 @@ public class UserDao implements GenericDao<User> {
         return user;
     }
 
-    @Override
-    public User findBy(String columnName, String value) {
-        User user = null;
-//        ResultSet resultSet = null;
+//    @Override
+//    public User findBy(String columnName, String value) {
+//        User user = null;
+////        ResultSet resultSet = null;
+////
+////        try(Connection connection = ConnectionPool.getConnection();
+////            PreparedStatement statement = connection.prepareStatement(SQL_FIND_USER_BY)) {
+////
+////            statement.setString(1, columnName);
+////            statement.setString(1, value);
+////            resultSet = statement.executeQuery();
+////
+////            while (resultSet.next()) {
+////                int id = resultSet.getInt(1);
+////                String name = resultSet.getNString(2);
+////                String email = resultSet.getString(3);
+////                String passDb = resultSet.getString(4);
+////
+////                user = new User(id, name, email, passDb);
+////            }
+////
+////        } catch (SQLException e) {
+////            e.printStackTrace();
+////        } finally {
+////            try {
+////                resultSet.close();
+////            } catch (SQLException e) {
+////                e.printStackTrace();
+////            }
+////        }
 //
-//        try(Connection connection = ConnectionPool.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(SQL_FIND_USER_BY)) {
-//
-//            statement.setString(1, columnName);
-//            statement.setString(1, value);
-//            resultSet = statement.executeQuery();
-//
-//            while (resultSet.next()) {
-//                int id = resultSet.getInt(1);
-//                String name = resultSet.getNString(2);
-//                String email = resultSet.getString(3);
-//                String passDb = resultSet.getString(4);
-//
-//                user = new User(id, name, email, passDb);
-//            }
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                resultSet.close();
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
-
-        return user;
-    }
+//        return user;
+//    }
 
     @Override
     public boolean update(User entity) {
