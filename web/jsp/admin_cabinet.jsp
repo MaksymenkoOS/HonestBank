@@ -12,7 +12,7 @@
 </head>
 <body>
 <h1>Admin Cabinet</h1>
-<div>Admin: ${admin.getEmail§()}</div>
+<div>Admin: ${admin.getEmail()}</div>
 
 <a href="/controller?command=sign_out">Sign Out</a>
 </body>
