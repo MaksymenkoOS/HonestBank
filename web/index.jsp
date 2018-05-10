@@ -15,7 +15,7 @@
 <a href="/controller?command=user_sign_up_page">User Registration</a>
 <a href="/controller?command=ADMIN_SIGN_IN_PAGE">Enter for Admins</a>
 
-<h1><a href="/controller?command=user_sign_in">Enter for users</a></h1>
+<%--<h1><a href="/controller?command=user_sign_in">Enter for users</a></h1>--%>
 <form action="/controller?command=user_sign_in" method="post">
     <fieldset class="signin_info">
         <label>

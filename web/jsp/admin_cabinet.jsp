@@ -12,8 +12,20 @@
 </head>
 <body>
 <h1>Admin Cabinet</h1>
-<div>Admin: ${admin.getEmail()}</div>
 
-<a href="/controller?command=sign_out">Sign Out</a>
+<header>
+    <div>Admin: ${admin.getEmail()}</div>
+    <a href="/controller?command=sign_out">Sign Out</a>
+</header>
+<h3>Open Accounts Requests</h3>
+<div class="requests">
+
+</div>
+
+<%--<h3>Account Info</h3>--%>
+<%--<div class="account_info">--%>
+
+<%--</div>--%>
+
 </body>
 </html>

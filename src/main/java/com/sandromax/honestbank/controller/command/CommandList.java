@@ -20,7 +20,8 @@ public enum CommandList {
     USER_SIGN_UP(new CommandUserSignUp()),
     USER_CABINET_PAGE(new CommandUserCabinetPage()),
 //    ADMIN_CABINET_PAGE(new CommandAdminCabinetPage()),
-    SIGN_OUT(new CommandSignOut());
+    SIGN_OUT(new CommandSignOut()),
+    NEW_ACCOUNT(new CommandNewAccount());
 
     private CommandList(Command command) {
         this.command = command;

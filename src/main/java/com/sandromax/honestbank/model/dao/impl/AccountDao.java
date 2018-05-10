@@ -37,7 +37,7 @@ public class AccountDao implements GenericDao<Account> {
             PreparedStatement statement = connection.prepareStatement(SQL_CREATE_ACCOUNT, Statement.RETURN_GENERATED_KEYS)) {
 
             AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
-            int typeId = accountTypeDao.findIdByName(entity.getType());
+            int typeId = accountTypeDao.findId(entity.getType());
             statement.setInt(1, typeId);
 
             int userId = entity.getUser().getIdInDb();
@@ -178,7 +178,7 @@ public class AccountDao implements GenericDao<Account> {
             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_ACCOUNT)) {
 
             AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
-            int typeId = accountTypeDao.findIdByName(entity.getType());
+            int typeId = accountTypeDao.findId(entity.getType());
             statement.setInt(1, typeId);
 
             int userId = entity.getUser().getIdInDb();
@@ -275,7 +275,7 @@ public class AccountDao implements GenericDao<Account> {
             statement.setInt(1, user.getIdInDb());
 
             AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
-            int typeId = accountTypeDao.findIdByName(type);
+            int typeId = accountTypeDao.findId(type);
             statement.setInt(2, typeId);
 
             resultSet = statement.executeQuery();

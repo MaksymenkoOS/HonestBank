@@ -131,7 +131,7 @@ public class AccountTypeDao implements GenericDao<AccountType> {
 
             statement.setString(1, entity.name());
 
-            int id = findIdByName(entity);
+            int id = findId(entity);
 
             if(id == 0)
                 return result;
@@ -163,7 +163,7 @@ public class AccountTypeDao implements GenericDao<AccountType> {
         return result;
     }
 
-    public int findIdByName(AccountType entity) {
+    public int findId(AccountType entity) {
         int id = 0;
         ResultSet resultSet = null;
 

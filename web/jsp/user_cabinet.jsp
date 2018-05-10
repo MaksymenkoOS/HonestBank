@@ -12,11 +12,18 @@
 </head>
 <body>
 <h1>Cabinet</h1>
-<div>User: ${user.getName()}</div>
-<a href="/controller?command=deposit_account">Deposit</a>
-<a href="/controller?command=credit_account">Credit</a>
+<header>
+    <div>User: ${user.getName()}</div>
+    <a href="/controller?command=sign_out">Sign Out</a>
+</header>
+<h3>ACCOUNTS</h3>
+<div class="accounts">
+    <a href="/controller?command=deposit_account">Deposit</a>
+    <a href="/controller?command=credit_account">Credit</a>
+</div>
 
-<a href="/controller?command=sign_out">Sign Out</a>
+
+
 
 </body>
 </html>

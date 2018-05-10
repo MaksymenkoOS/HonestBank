@@ -17,6 +17,10 @@ public class User {
      * Constructor without arguments
      */
     public User() {
+        idInDb = 0;
+        name = "";
+        email = "";
+        pass = "";
     }
 
     /**

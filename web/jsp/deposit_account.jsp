@@ -11,12 +11,24 @@
     <title>Deposit</title>
 </head>
 <body>
+
 <h1>Deposit Account</h1>
-<div>User: ${user.getName()}</div>
 
-<a href="/controller?command=replenishment_page">Replenish</a>
+<header>
+    <div>User: ${user.getName()}</div>
+    <a href="/controller?command=sign_out">Sign Out</a>
+</header>
+<h3>Operations</h3>
+<div class="account_operations">
+    <a href="/controller?command=replenishment_page">Replenish</a>
+    <a href="/controller?command=user_cabinet_page">Cabinet</a>
+    <a href="/controller?command=new_account">New</a>
+</div>
 
-<a href="/controller?command=user_cabinet_page">Cabinet</a>
-<a href="/controller?command=sign_out">Sign Out</a>
+<h3>Account Info</h3>
+<div class="account_info">
+
+</div>
+
 </body>
 </html>

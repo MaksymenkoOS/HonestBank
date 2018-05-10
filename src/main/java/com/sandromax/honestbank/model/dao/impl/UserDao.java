@@ -58,7 +58,6 @@ public class UserDao implements GenericDao<User> {
 
 
         return newGeneratedId;
-
     }
 
     @Override
@@ -230,7 +229,8 @@ public class UserDao implements GenericDao<User> {
             e.printStackTrace();
         }
 
-        return result;    }
+        return result;
+    }
 
     public User findByEmail(String email) {
         User user = null;
