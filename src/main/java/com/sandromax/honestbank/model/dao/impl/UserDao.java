@@ -5,6 +5,7 @@ import com.sandromax.honestbank.domain.service.log.Logger;
 import com.sandromax.honestbank.domain.user.User;
 import com.sandromax.honestbank.model.dao.GenericDao;
 import com.sandromax.honestbank.model.dao.connection.ConnectionPool;
+import com.sandromax.honestbank.model.exception.DaoException;
 
 import java.sql.*;
 import java.util.LinkedList;
@@ -18,7 +19,7 @@ public class UserDao implements GenericDao<User> {
 
     private Logger logger;
 
-    private static final String SQL_CREATE_USER = "INSERT INTO themes(name, email, pass) VALUES(?, ?, ?);";
+    private static final String SQL_CREATE_USER = "INSERT INTO user(name, email, pass) VALUES(?, ?, ?);";
     private static final String SQL_FIND_ALL_USERS = "SELECT * FROM user;";
     private static final String SQL_FIND_USER_BY_ID = "SELECT * FROM user WHERE id = ?;";
     private static final String SQL_FIND_USER_BY_NAME = "SLECT * FROM user WHERE name = ?;";
@@ -26,6 +27,7 @@ public class UserDao implements GenericDao<User> {
     private static final String SQL_UPDATE_USER = "UPDATE user SET name = ?, pass = ? WHERE email = ?;";
     private static final String SQL_DELETE_USER = "DELETE FROM user WHERE email = ?;";
     private static final String SQL_FIND_USER_BY_EMAIL = "SELECT * FROM user WHERE email = ?";
+    private static final String SQL_FIND_USER_BY_EMAIL_AND_PASS = "SELECT * FROM user WHERE email = ? AND pass = ?";
 
 
 
@@ -36,13 +38,14 @@ public class UserDao implements GenericDao<User> {
         String passHash = BCrypt.hashpw(entity.getPass(), BCrypt.gensalt(13));
 
         try(Connection connection = ConnectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_CREATE_USER)) {
+            PreparedStatement statement = connection.prepareStatement(SQL_CREATE_USER, Statement.RETURN_GENERATED_KEYS)) {
 
             statement.setString(1, entity.getName());
             statement.setString(2, entity.getEmail());
             statement.setString(3, passHash);
 
             statement.executeUpdate();
+            logger.log("user: " + entity.getName() + " was successfully registered");
 
             //  return new new generated id
             ResultSet rs = statement.getGeneratedKeys();
@@ -76,6 +79,8 @@ public class UserDao implements GenericDao<User> {
                 User user = new User(id, name, email, pass);
                 users.add(user);
             }
+
+            logger.log("found " + users.size() + " users.");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -218,6 +223,9 @@ public class UserDao implements GenericDao<User> {
             statement.setString(1, entity.getEmail());
 
             result = statement.execute();
+
+            if(result)
+                logger.log("account of user " + entity.getName() + " was deleted.");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -255,4 +263,37 @@ public class UserDao implements GenericDao<User> {
 
         return user;
     }
+
+//    public User findByEmailAndPass(String email, String pass) {
+//        User user = null;
+//        ResultSet resultSet = null;
+//
+//        try(Connection connection = ConnectionPool.getConnection();
+//            PreparedStatement statement = connection.prepareStatement(SQL_FIND_USER_BY_EMAIL_AND_PASS)) {
+//
+//            statement.setString(1, email);
+//            statement.setString(2, pass);
+//            resultSet = statement.executeQuery();
+//
+//            while (resultSet.next()) {
+//                int id = resultSet.getInt(1);
+//                String name = resultSet.getNString(2);
+////                String emailDb = resultSet.getString(3);
+//                String passDb = resultSet.getString(4);
+//
+//                user = new User(id, name, email, passDb);
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                resultSet.close();
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        return user;
+//    }
 }

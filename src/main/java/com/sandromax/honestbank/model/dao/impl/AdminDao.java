@@ -24,6 +24,7 @@ public class AdminDao implements GenericDao<Admin> {
 //    private static final String SQL_FIND_ADMIN_BY_NAME = "SELECT * FROM admin WHERE name = ?;";
     private static final String SQL_UPDATE_ADMIN = "UPDATE admin SET pass = ? WHERE email = ?;";
     private static final String SQL_DELETE_ADMIN = "DELETE FROM admin WHERE email = ?;";
+    private static final String SQL_FIND_ADMIN_BY_EMAIL = "SELECT * FROM admin WHERE email = ?;";
 
     @Override
     public int create(Admin entity) {
@@ -31,7 +32,7 @@ public class AdminDao implements GenericDao<Admin> {
         String passHash = BCrypt.hashpw(entity.getPass(), BCrypt.gensalt(13));
 
         try(Connection connection = ConnectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_CREATE_ADMIN)) {
+            PreparedStatement statement = connection.prepareStatement(SQL_CREATE_ADMIN, Statement.RETURN_GENERATED_KEYS)) {
 
             statement.setString(1, entity.getEmail());
             statement.setString(2, passHash);
@@ -161,5 +162,36 @@ public class AdminDao implements GenericDao<Admin> {
         }
 
         return result;
+    }
+
+    public Admin findByEmail(String email) {
+        Admin admin = null;
+        ResultSet resultSet = null;
+
+        try(Connection connection = ConnectionPool.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_FIND_ADMIN_BY_EMAIL)) {
+
+            statement.setString(1, email);
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+//                String emailDb = resultSet.getString(2);
+                String passDb = resultSet.getString(3);
+
+                admin = new Admin(id, email, passDb);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return admin;
     }
 }

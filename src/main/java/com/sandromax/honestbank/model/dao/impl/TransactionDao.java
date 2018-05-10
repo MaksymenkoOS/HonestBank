@@ -42,7 +42,7 @@ public class TransactionDao implements GenericDao<Transaction> {
             int recipientAccountId = entity.getRecipient().getIdInDb();
             statement.setInt(3, recipientAccountId);
 
-            statement.executeUpdate();
+            statement.executeUpdate();;
 
             //  return new new generated id
             ResultSet rs = statement.getGeneratedKeys();

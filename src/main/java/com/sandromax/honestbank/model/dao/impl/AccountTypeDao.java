@@ -31,7 +31,7 @@ public class AccountTypeDao implements GenericDao<AccountType> {
         int newGeneratedId = 0;
 
         try(Connection connection = ConnectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_CREATE_ACCOUNT_TYPE)) {
+            PreparedStatement statement = connection.prepareStatement(SQL_CREATE_ACCOUNT_TYPE, Statement.RETURN_GENERATED_KEYS)) {
 
             //  lower case or upper case
             //  which is better ?
