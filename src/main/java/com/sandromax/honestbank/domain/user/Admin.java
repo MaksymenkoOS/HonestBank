@@ -39,4 +39,9 @@ public class Admin {
     public void setIdInDb(int idInDb) {
         IdInDb = idInDb;
     }
+
+    public boolean clearPass() {
+        pass = "";
+        return true;
+    }
 }

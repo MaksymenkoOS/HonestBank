@@ -46,6 +46,18 @@ public class User {
     }
 
     /**
+     * Safe Initialize (without password)
+     * @param idInDb    id in the database
+     * @param name  user name
+     * @param email user email
+     */
+    public User(int idInDb, String name, String email) {
+        this.idInDb = idInDb;
+        this.name = name;
+        this.email = email;
+    }
+
+    /**
      * Getter
      * @return  id in the database
      */
@@ -83,5 +95,10 @@ public class User {
      */
     public void setIdInDb(int idInDb) {
         this.idInDb = idInDb;
+    }
+
+    public boolean clearPass() {
+        pass = "";
+        return true;
     }
 }
