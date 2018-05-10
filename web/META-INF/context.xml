@@ -10,7 +10,7 @@
         username="mysql.app"
         password="56MAdb_!@#good"
         driverClassName="com.mysql.jdbc.Driver"
-        url="jdbc:mysql://localhost:3306/fastest?autoReconnect=true&amp;useEncoding=true&amp;characterEncoding=UTF-8"
+        url="jdbc:mysql://localhost:3306/honest_bank?autoReconnect=true&amp;useEncoding=true&amp;characterEncoding=UTF-8"
         useSSL="false"
     />
     <!--useUnicode="true"-->
