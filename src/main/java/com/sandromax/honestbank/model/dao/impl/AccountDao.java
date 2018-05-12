@@ -66,8 +66,8 @@ public class AccountDao implements GenericDao<Account> {
     }
 
     @Override
-    public List<Account> findAll() {
-        List<Account> accounts = new LinkedList<>();
+    public LinkedList<Account> findAll() {
+        LinkedList<Account> accounts = new LinkedList<>();
         ResultSet resultSet = null;
 
         try(Connection connection = ConnectionPool.getConnection();
@@ -263,15 +263,19 @@ public class AccountDao implements GenericDao<Account> {
         return accounts;
     }
 
-    public List<Account> findByUserEmailAndAccountType(String email, AccountType type) {
+    public LinkedList<Account> findByUserAndAccountType(User user, AccountType type) {
         LinkedList<Account> accounts = new LinkedList<>();
         ResultSet resultSet = null;
 
         try(Connection connection = ConnectionPool.getConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_ACCOUNTS_BY_USER_ID_AND_TYPE_ID)) {
 
-            UserDao userDao = new UserDao(logger);
-            User user = userDao.findByEmail(email);
+            int userId = user.getIdInDb();
+            if(userId == 0) {
+                UserDao userDao = new UserDao(logger);
+                user = userDao.findByEmail(user.getEmail());
+                userId = user.getIdInDb();
+            }
             statement.setInt(1, user.getIdInDb());
 
             AccountTypeDao accountTypeDao = new AccountTypeDao(logger);

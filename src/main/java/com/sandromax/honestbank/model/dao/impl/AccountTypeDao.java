@@ -52,8 +52,8 @@ public class AccountTypeDao implements GenericDao<AccountType> {
     }
 
     @Override
-    public List<AccountType> findAll() {
-        List<AccountType> types = new LinkedList<>();
+    public LinkedList<AccountType> findAll() {
+        LinkedList<AccountType> types = new LinkedList<>();
         ResultSet resultSet = null;
 
         try(Connection connection = ConnectionPool.getConnection();
@@ -83,10 +83,10 @@ public class AccountTypeDao implements GenericDao<AccountType> {
              PreparedStatement statement = connection.prepareStatement(SQL_FIND_ACCOUNT_TYPE_BY_ID)) {
 
             statement.setInt(1, id);
-            statement.executeQuery();
+            resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                type = AccountType.valueOf(resultSet.getString(1));
+                type = AccountType.valueOf(resultSet.getString(1).toUpperCase());
             }
 
         } catch (SQLException e) {

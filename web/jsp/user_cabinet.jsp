@@ -22,8 +22,10 @@
     <a href="/controller?command=credit_account">Credit</a>
 </div>
 
-
-
+<div class="message">
+    <h4>Messages</h4>
+    ${message}
+</div>
 
 </body>
 </html>

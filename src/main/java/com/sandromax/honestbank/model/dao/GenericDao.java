@@ -1,6 +1,6 @@
 package com.sandromax.honestbank.model.dao;
 
-import java.util.List;
+import java.util.LinkedList;
 
 /**
  * Created by sandro on 26.04.18.
@@ -8,7 +8,7 @@ import java.util.List;
 public interface GenericDao<T> {
     int create(T entity);
 
-    List<T> findAll();
+    LinkedList<T> findAll();
 
     T findById(int id);
 

@@ -5,7 +5,6 @@ import com.sandromax.honestbank.domain.service.log.Logger;
 import com.sandromax.honestbank.domain.user.User;
 import com.sandromax.honestbank.model.dao.GenericDao;
 import com.sandromax.honestbank.model.dao.connection.ConnectionPool;
-import com.sandromax.honestbank.model.exception.DaoException;
 
 import java.sql.*;
 import java.util.LinkedList;
@@ -61,8 +60,8 @@ public class UserDao implements GenericDao<User> {
     }
 
     @Override
-    public List<User> findAll() {
-        List<User> users = new LinkedList<>();
+    public LinkedList<User> findAll() {
+        LinkedList<User> users = new LinkedList<>();
         ResultSet resultSet = null;
 
         try(Connection connection = ConnectionPool.getConnection();

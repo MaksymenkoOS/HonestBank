@@ -34,7 +34,7 @@ public class CommandUserSignUp implements Command {
             sessionLogOut(request);
 
             HttpSession session = request.getSession();
-            session.setAttribute("user_name", user.getName());
+            session.setAttribute("user", user);
 
             user = null;    //  todo Ask: how to kill user object?
         }

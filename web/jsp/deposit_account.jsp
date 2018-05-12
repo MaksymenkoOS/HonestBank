@@ -18,17 +18,21 @@
     <div>User: ${user.getName()}</div>
     <a href="/controller?command=sign_out">Sign Out</a>
 </header>
-<h3>Operations</h3>
 <div class="account_operations">
+    <h3>Operations</h3>
+
     <a href="/controller?command=replenishment_page">Replenish</a>
     <a href="/controller?command=user_cabinet_page">Cabinet</a>
     <a href="/controller?command=new_account">New</a>
 </div>
 
-<h3>Account Info</h3>
 <div class="account_info">
+    <h3>Account Info</h3>
 
 </div>
-
+<div class="message">
+    <h4>Messages</h4>
+    ${message}
+</div>
 </body>
 </html>

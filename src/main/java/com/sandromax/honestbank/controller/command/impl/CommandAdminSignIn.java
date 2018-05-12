@@ -2,21 +2,37 @@ package com.sandromax.honestbank.controller.command.impl;
 
 import com.sandromax.honestbank.controller.command.Command;
 import com.sandromax.honestbank.controller.until.constants.Pages;
+import com.sandromax.honestbank.domain.account.NewAccountRequest;
 import com.sandromax.honestbank.domain.service.BCrypt;
 import com.sandromax.honestbank.domain.service.log.FileLogger;
 import com.sandromax.honestbank.domain.user.Admin;
-import com.sandromax.honestbank.domain.user.User;
 import com.sandromax.honestbank.model.dao.impl.AdminDao;
-import com.sandromax.honestbank.model.dao.impl.UserDao;
+import com.sandromax.honestbank.model.dao.impl.NewAccountRequestDao;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.LinkedList;
 
 public class CommandAdminSignIn implements Command {
     @Override
     public String execute(HttpServletRequest request) {
-        String page = Pages.ADMIN_CABINET;
+        String page;
 
+        if(authorizeAdmin(request)) {
+            page = Pages.ADMIN_CABINET;
+
+            LinkedList<NewAccountRequest> requests = getAllNotConfirmedRequests();
+            request.setAttribute("requests", requests);
+        }
+        else {
+            page = Pages.ADMIN_SIGN_IN;
+
+        }
+
+        return page;
+    }
+
+    private boolean authorizeAdmin(HttpServletRequest request) {
         sessionLogOut(request);
 
         String emailParam = request.getParameter("email");
@@ -28,8 +44,7 @@ public class CommandAdminSignIn implements Command {
         Admin admin = adminDao.findByEmail(emailParam);
 
         if(admin == null) {
-            page = Pages.INDEX;
-            return page;
+            return false;
         }
         else {
             String passDb = admin.getPass();
@@ -37,13 +52,20 @@ public class CommandAdminSignIn implements Command {
 //            session.setAttribute("user_name", user.getName());
                 admin.clearPass();
                 session.setAttribute("admin", admin);
+
+                return true;
             } else {
-                page = Pages.ADMIN_SIGN_IN;
                 request.setAttribute("error_message", "wrong email or password");
+                return false;
             }
         }
+    }
 
-        return page;
+    private LinkedList<NewAccountRequest> getAllNotConfirmedRequests() {
+        NewAccountRequestDao dao = new NewAccountRequestDao(new FileLogger());
+        LinkedList<NewAccountRequest> requests = dao.findAllNotConfirmed();
+
+        return requests;
     }
 
     private void sessionLogOut(HttpServletRequest request) {

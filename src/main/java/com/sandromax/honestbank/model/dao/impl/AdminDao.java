@@ -52,8 +52,8 @@ public class AdminDao implements GenericDao<Admin> {
     }
 
     @Override
-    public List<Admin> findAll() {
-        List<Admin> admins = new LinkedList<>();
+    public LinkedList<Admin> findAll() {
+        LinkedList<Admin> admins = new LinkedList<>();
         ResultSet resultSet = null;
 
         try(Connection connection = ConnectionPool.getConnection();

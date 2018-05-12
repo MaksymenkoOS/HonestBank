@@ -1,6 +1,5 @@
 package com.sandromax.honestbank.model.dao.impl;
 
-import com.sandromax.honestbank.domain.account.CreditAccount;
 import com.sandromax.honestbank.domain.account.CreditFeatures;
 import com.sandromax.honestbank.domain.service.log.Logger;
 import com.sandromax.honestbank.model.dao.GenericDao;
@@ -49,8 +48,8 @@ public class CreditFeaturesDao implements GenericDao<CreditFeatures> {
     }
 
     @Override
-    public List<CreditFeatures> findAll() {
-        List<CreditFeatures> features = new LinkedList<>();
+    public LinkedList<CreditFeatures> findAll() {
+        LinkedList<CreditFeatures> features = new LinkedList<>();
         ResultSet resultSet = null;
 
         try(Connection connection = ConnectionPool.getConnection();

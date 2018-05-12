@@ -8,6 +8,7 @@ import com.sandromax.honestbank.model.dao.GenericDao;
 import com.sandromax.honestbank.model.dao.connection.ConnectionPool;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,11 +20,11 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
 
     private Logger logger;
 
-    private static final String SQL_CREATE_NEW_ACCOUNT_REQUEST = "INSERT INTO new_account_request(type_id, user_id) VALUES(?, ?);";
+    private static final String SQL_CREATE_NEW_ACCOUNT_REQUEST = "INSERT INTO new_account_request(type_id, user_id, date, is_confirmed) VALUES(?, ?, ?, ?);";
     private static final String SQL_FIND_ALL_ACCOUNT_REQUESTS = "SELECT * FROM new_account_request;";
     private static final String SQL_FIND_ACCOUNT_REQUEST_BY_ID = "SELECT * FROM new_account_request WHERE id = ?;";
-//    private static final String SQL_UPDATE_ACCOUNT_REQUEST = "UPDATE new_account_request SET name = ?, pass = ? WHERE email = ?;";
-    private static final String SQL_DELETE_ACCOUNT_REQUEST = "DELETE FROM new_account_request WHERE id = ?;";
+    private static final String SQL_FIND_ALL_ACCOUNT_REQUESTS_NOT_CONFIRMED = "SELECT * FROM new_account_request WHERE is_confirmed = false;";
+    private static final String SQL_FIND_ACCOUNT_REQUEST_BY_TYPE_ID_AND_USER_ID_NOT_CONFIRMED = "SELECT id FROM new_account_request WHERE type_id = ? AND user_id = ? AND is_confirmed = false;";
 
     @Override
     public int create(NewAccountRequest entity) {
@@ -46,6 +47,8 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
 
             statement.setInt(1, typeId);
             statement.setInt(2, userId);
+            statement.setDate(3, Date.valueOf(LocalDate.now()));
+            statement.setBoolean(4, false);
 
             statement.executeUpdate();
 
@@ -63,8 +66,8 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
     }
 
     @Override
-    public List<NewAccountRequest> findAll() {
-        List<NewAccountRequest> requests = new LinkedList<>();
+    public LinkedList<NewAccountRequest> findAll() {
+        LinkedList<NewAccountRequest> requests = new LinkedList<>();
         ResultSet resultSet = null;
 
         try(Connection connection = ConnectionPool.getConnection();
@@ -75,6 +78,8 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
                 int id = resultSet.getInt(1);
                 int typeId = resultSet.getInt(2);
                 int userId = resultSet.getInt(3);
+                LocalDate date = resultSet.getDate(4).toLocalDate();
+                boolean isConfirmed = resultSet.getBoolean(5);
 
                 AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
                 AccountType accountType = accountTypeDao.findById(typeId);
@@ -82,7 +87,7 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
                 UserDao userDao = new UserDao(logger);
                 User user = userDao.findById(userId);
 
-                NewAccountRequest newAccountRequest = new NewAccountRequest(id, accountType, user);
+                NewAccountRequest newAccountRequest = new NewAccountRequest(id, accountType, user, date, isConfirmed);
                 requests.add(newAccountRequest);
             }
 
@@ -110,6 +115,8 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
 //                int id = resultSet.getInt(1);
                 int typeId = resultSet.getInt(2);
                 int userId = resultSet.getInt(3);
+                LocalDate date = resultSet.getDate(4).toLocalDate();
+                boolean isConfirmed = resultSet.getBoolean(5);
 
                 AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
                 AccountType accountType = accountTypeDao.findById(typeId);
@@ -117,7 +124,7 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
                 UserDao userDao = new UserDao(logger);
                 User user = userDao.findById(userId);
 
-                newAccountRequest = new NewAccountRequest(id, accountType, user);
+                newAccountRequest = new NewAccountRequest(id, accountType, user, date, isConfirmed);
             }
 
         } catch (SQLException e) {
@@ -133,39 +140,93 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
         return newAccountRequest;
     }
 
-//    @Override
-//    public NewAccountRequest findByName(String name) {
-//        return null;
-//    }
-//
-//    @Override
-//    public NewAccountRequest findBy(String columnName, String value) {
-//        return null;
-//    }
-
     @Override
     public boolean update(NewAccountRequest entity) {
-        logger.log("better delete");
+        logger.log("can't change NewAccountRequest");
         return false;
     }
 
     @Override
     public boolean delete(NewAccountRequest entity) {
-        boolean result = false;
+        logger.log("can't change and delete NewAccountRequest");
+        return false;
+    }
+
+    public LinkedList<NewAccountRequest> findAllNotConfirmed() {
+        LinkedList<NewAccountRequest> requests = new LinkedList<>();
+        ResultSet resultSet = null;
 
         try(Connection connection = ConnectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_DELETE_ACCOUNT_REQUEST)) {
+            Statement statement = connection.createStatement()) {
+            resultSet = statement.executeQuery(SQL_FIND_ALL_ACCOUNT_REQUESTS_NOT_CONFIRMED);
 
-            statement.setInt(1, entity.getIdInDb());
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                int typeId = resultSet.getInt(2);
+                int userId = resultSet.getInt(3);
+                LocalDate date = resultSet.getDate(4).toLocalDate();
+                boolean isConfirmed = resultSet.getBoolean(5);
 
-            result = statement.execute();
+                AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
+                AccountType accountType = accountTypeDao.findById(typeId);
 
-            if(result)
-                logger.log("new account request of user (id: " + entity.getIdInDb() + ") was deleted.");
+                UserDao userDao = new UserDao(logger);
+                User user = userDao.findById(userId);
+
+                NewAccountRequest newAccountRequest = new NewAccountRequest(id, accountType, user, date, isConfirmed);
+                requests.add(newAccountRequest);
+            }
+
+            logger.log("found " + requests.size() + " requests.");
+
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
-        return result;
+        return requests;
+    }
+
+    public boolean isContainNotConfirmedByUserAndType(AccountType type, User user) {
+        ResultSet resultSet = null;
+
+        try(Connection connection = ConnectionPool.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_FIND_ACCOUNT_REQUEST_BY_TYPE_ID_AND_USER_ID_NOT_CONFIRMED)) {
+
+            AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
+            int typeId = accountTypeDao.findId(type);
+
+            int userId = user.getIdInDb();
+            if(userId == 0) {
+                UserDao userDao = new UserDao(logger);
+                String email = user.getEmail();
+                User userDb = userDao.findByEmail(email);
+                userId = userDb.getIdInDb();
+            }
+
+            statement.setInt(1, typeId);
+            statement.setInt(2, userId);
+
+            resultSet = statement.executeQuery();
+            if(resultSet.next())
+                return true;
+            else return false;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        //  if can't check - can't add!
+        return true;
     }
 }

@@ -9,7 +9,6 @@ import com.sandromax.honestbank.model.dao.connection.ConnectionPool;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
-import java.util.List;
 
 public class TransactionDao implements GenericDao<Transaction> {
 
@@ -58,7 +57,7 @@ public class TransactionDao implements GenericDao<Transaction> {
     }
 
     @Override
-    public List<Transaction> findAll() {
+    public LinkedList<Transaction> findAll() {
         LinkedList<Transaction> transactions = new LinkedList<>();
         ResultSet resultSet = null;
 
