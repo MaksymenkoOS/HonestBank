@@ -32,6 +32,16 @@ public class Account {
     }
 
     /**
+     * Standart constructor
+     * @param type
+     * @param user
+     */
+    public Account(AccountType type, User user) {
+        this.type = type;
+        this.user = user;
+    }
+
+    /**
      * Initialize without idInDb and history
      * @param type  account type name
      * @param user  owner
@@ -138,6 +148,14 @@ public class Account {
     /**
      * Setters
      */
+
+    /**
+     * Setter id in the database
+     * @param idInDb
+     */
+    public void setIdInDb(int idInDb) {
+        this.idInDb = idInDb;
+    }
 
     /**
      * Setter balance
