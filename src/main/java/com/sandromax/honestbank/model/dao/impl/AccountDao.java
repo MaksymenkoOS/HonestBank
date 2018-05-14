@@ -221,7 +221,7 @@ public class AccountDao implements GenericDao<Account> {
         return result;
     }
 
-    public List<Account> findByUserEmail(String email) {
+    public LinkedList<Account> findByUserEmail(String email) {
         LinkedList<Account> accounts = new LinkedList<>();
         ResultSet resultSet = null;
 

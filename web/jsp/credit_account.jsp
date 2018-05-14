@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: sandro
@@ -28,7 +29,30 @@
 
 <div class="account_info">
     <h3>Account Info</h3>
-
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>TYPE</th>
+            <th>USER NAME</th>
+            <th>USER EMAIL</th>
+            <th>BALANCE</th>
+            <th>RATE</th>
+            <th>OPENING DATE</th>
+            <th>CLOSING DATE</th>
+        </tr>
+        <c:forEach items="${accounts}" var="item">
+            <tr>
+                <td>${item.getIdInDb()}</td>
+                <td>${item.getType()}</td>
+                <td>${item.getUser().getName()}</td>
+                <td>${item.getUser().getEmail()}</td>
+                <td>${item.getBalance()}</td>
+                <td>${item.getRate()}</td>
+                <td>${item.getValidityFrom()}</td>
+                <td>${item.getValidityTo()}</td>
+            </tr>
+        </c:forEach>
+    </table>
 
 </div>
 <div class="message">
