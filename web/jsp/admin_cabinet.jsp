@@ -18,7 +18,7 @@
     <div>Admin: ${admin.getEmail()}</div>
     <a href="/controller?command=sign_out">Sign Out</a>
 </header>
-<h3>Open Accounts Requests</h3>
+<h3>Accounts Opening Requests</h3>
 <div class="requests">
     <table>
         <tr>
@@ -32,16 +32,49 @@
                 <td>${item.getAccountType()}</td>
                 <td>${item.getUser().getEmail()}</td>
                 <td>${item.getDate()}</td>
-                <td><button>Confirm</button></td>
+                <td>
+                    <a href="/controller?command=confirm_request&request_id=${item.getIdInDb()}">
+                        <input type="button" value="Confirm">
+                    </a>
+                </td>
             </tr>
         </c:forEach>
     </table>
 </div>
 
-<%--<h3>Account Info</h3>--%>
-<%--<div class="account_info">--%>
+<div class="message">
+    <h4>Messages</h4>
+    ${message}
+</div>
 
-<%--</div>--%>
+<div class="active_account">
+    <h4>Active Accounts</h4>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>TYPE</th>
+            <th>USER NAME</th>
+            <th>USER EMAIL</th>
+            <th>BALANCE</th>
+            <th>RATE</th>
+            <th>OPENING DATE</th>
+            <th>CLOSING DATE</th>
+        </tr>
+        <c:forEach items="${active_accounts}" var="item">
+            <tr>
+                <td>${item.getIdInDb()}</td>
+                <td>${item.getType()}</td>
+                <td>${item.getUser().getName()}</td>
+                <td>${item.getUser().getEmail()}</td>
+                <td>${item.getBalance()}</td>
+                <td>${item.getRate()}</td>
+                <td>${item.getValidityFrom()}</td>
+                <td>${item.getValidityTo()}</td>
+            </tr>
+        </c:forEach>
+    </table>
+
+</div>
 
 </body>
 </html>

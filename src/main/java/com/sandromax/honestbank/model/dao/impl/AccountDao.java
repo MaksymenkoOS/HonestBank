@@ -20,7 +20,7 @@ public class AccountDao implements GenericDao<Account> {
 
     private Logger logger;
 
-    private static final String SQL_CREATE_ACCOUNT = "INSERT INTO account (type_id, user_id, balance, validity_to, rate) VALUES(?, ?, ?, ?, ?);";
+    private static final String SQL_CREATE_ACCOUNT = "INSERT INTO account (type_id, user_id, balance, validity_from, validity_to, rate) VALUES(?, ?, ?, ?, ?, ?);";
     private static final String SQL_FIND_ALL_ACCOUNTS = "SELECT * FROM account;";
     private static final String SQL_FIND_ACCOUNT_BY_ID = "SELECT * FROM account WHERE id = ?;";
 //    private static final String SQL_FIND_ACCOUNT_BY_NAME = "SELECT * FROM account WHERE name = ?;";
@@ -45,10 +45,13 @@ public class AccountDao implements GenericDao<Account> {
 
             statement.setDouble(3, entity.getBalance());
 
-            Date validityTo = Date.valueOf(entity.getValidityTo());
-            statement.setDate(4, validityTo);
+            Date validityFrom = Date.valueOf(entity.getValidityFrom());
+            statement.setDate(4, validityFrom);
 
-            statement.setDouble(5, entity.getRate());
+            Date validityTo = Date.valueOf(entity.getValidityTo());
+            statement.setDate(5, validityTo);
+
+            statement.setDouble(6, entity.getRate());
 
             statement.executeUpdate();
 

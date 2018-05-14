@@ -27,6 +27,7 @@ public class CommandUserSignIn implements Command {
 
         if(user == null) {
             page = Pages.INDEX;
+            request.setAttribute("message", "wrong email or password");
             return page;
         }
         else {
@@ -38,7 +39,7 @@ public class CommandUserSignIn implements Command {
                 user = null;
             } else {
                 page = Pages.INDEX;
-                request.setAttribute("error_message", "wrong email or password");
+                request.setAttribute("message", "wrong email or password");
             }
         }
 

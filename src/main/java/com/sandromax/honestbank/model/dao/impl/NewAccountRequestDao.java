@@ -25,6 +25,7 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
     private static final String SQL_FIND_ACCOUNT_REQUEST_BY_ID = "SELECT * FROM new_account_request WHERE id = ?;";
     private static final String SQL_FIND_ALL_ACCOUNT_REQUESTS_NOT_CONFIRMED = "SELECT * FROM new_account_request WHERE is_confirmed = false;";
     private static final String SQL_FIND_ACCOUNT_REQUEST_BY_TYPE_ID_AND_USER_ID_NOT_CONFIRMED = "SELECT id FROM new_account_request WHERE type_id = ? AND user_id = ? AND is_confirmed = false;";
+    private static final String SQL_SET_CONFIRMED_BY_ID = "UPDATE new_account_request SET is_confirmed = true WHERE id = ?;";
 
     @Override
     public int create(NewAccountRequest entity) {
@@ -228,5 +229,21 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
         }
         //  if can't check - can't add!
         return true;
+    }
+
+    public boolean setConfirmedById(int id) {
+
+        try(Connection connection = ConnectionPool.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_SET_CONFIRMED_BY_ID)) {
+
+            statement.setInt(1, id);
+
+            return statement.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }

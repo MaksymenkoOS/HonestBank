@@ -22,7 +22,7 @@ public enum CommandList {
 //    ADMIN_CABINET_PAGE(new CommandAdminCabinetPage()),
     SIGN_OUT(new CommandSignOut()),
     NEW_ACCOUNT(new CommandNewAccount()),
-    confirm_request(new CommandConfirmRequest());
+    CONFIRM_REQUEST(new CommandConfirmRequest());
 
     private CommandList(Command command) {
         this.command = command;

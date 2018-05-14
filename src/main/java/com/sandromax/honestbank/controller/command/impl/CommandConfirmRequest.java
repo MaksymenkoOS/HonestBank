@@ -12,10 +12,13 @@ import com.sandromax.honestbank.model.dao.impl.AccountDao;
 import com.sandromax.honestbank.model.dao.impl.NewAccountRequestDao;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedList;
 
 public class CommandConfirmRequest implements Command {
     int newAccountRequestId;
     Logger logger = new FileLogger();
+    NewAccountRequestDao newAccountRequestDao;
+    NewAccountRequest newAccountRequest;
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -25,47 +28,64 @@ public class CommandConfirmRequest implements Command {
 
         createAccount(newAccountRequestId);
 
-        setRequestAsActive(newAccountRequestId); // TODO: 13.05.18  
+        setRequestAsActive(newAccountRequest); // TODO: 13.05.18  Ask: How it looks??
 
-        createNewRequestList();
-
-        setParams();
+        setParams(request, createNewRequestList(), getAllActiveAccounts()); // TODO: 14.05.18 ASK: How it looks?
 
         return page;
     }
 
     private void collectAndCheckParams(HttpServletRequest request) {
-        String param = (String) request.getParameter("request_id");
-        newAccountRequestId = Integer.parseInt(param);
-    }
-
-    private void createAccount(int newAccountRequestId) {
-        NewAccountRequestDao newAccountRequestDao = new NewAccountRequestDao(logger);
-        NewAccountRequest newAccountRequest = newAccountRequestDao.findById(newAccountRequestId);
-
-        if(newAccountRequest == null) {
-            AccountType accountType = newAccountRequest.getAccountType();
-            User user = newAccountRequest.getUser();
-            Account newAccount = new Account(accountType, user);
-
-            AccountDao accountDao = new AccountDao(logger);
-            int id = accountDao.create(newAccount);
-            if(id != 0)
-                newAccount.setIdInDb(id);
+        String param = request.getParameter("request_id");
+        if(param.length() != 0)
+            newAccountRequestId = Integer.parseInt(param);
+        else {
+            logger.log("Error! Empty param field ('request_id')");
+            request.setAttribute("message", "Error! Empty param field ('request_id')");
         }
     }
 
-    private void setRequestAsActive(int newAccountRequestId) {
+    private void createAccount(int newAccountRequestId) {
+        try {
+            newAccountRequestDao = new NewAccountRequestDao(logger);
+            newAccountRequest = newAccountRequestDao.findById(newAccountRequestId);
 
+            if(newAccountRequest != null) {
+                AccountType accountType = newAccountRequest.getAccountType();
+                User user = newAccountRequest.getUser();
+                Account newAccount = new Account(accountType, user);
+
+                AccountDao accountDao = new AccountDao(logger);
+                if(accountDao.findByUserAndAccountType(user, accountType).size() == 0) {
+                    int id = accountDao.create(newAccount);
+                    if(id != 0)
+                        newAccount.setIdInDb(id);
+                }
+            }
+        } catch (Exception e) {
+            // TODO: 14.05.18 DaoException
+        }
     }
 
-    private void createNewRequestList() {
-
+    private void setRequestAsActive(NewAccountRequest accountRequest) {
+//        accountRequest.setConfirmed(true);
+        newAccountRequestDao = new NewAccountRequestDao(logger);
+        newAccountRequestDao.setConfirmedById(newAccountRequestId);
     }
 
-    private void setParams() {
-
+    private LinkedList<NewAccountRequest> createNewRequestList() {
+        NewAccountRequestDao dao = new NewAccountRequestDao(new FileLogger());
+        return dao.findAllNotConfirmed();
     }
 
+    private LinkedList<Account> getAllActiveAccounts() {
+        AccountDao accountDao = new AccountDao(logger);
+        return accountDao.findAll();
+    }
+
+    private void setParams(HttpServletRequest request, LinkedList<NewAccountRequest> newAccountRequests, LinkedList<Account> activeAccounts) {
+        request.setAttribute("requests", newAccountRequests);
+        request.setAttribute("active_accounts", activeAccounts);
+    }
 
 }

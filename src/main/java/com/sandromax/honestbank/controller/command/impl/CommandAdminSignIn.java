@@ -2,10 +2,13 @@ package com.sandromax.honestbank.controller.command.impl;
 
 import com.sandromax.honestbank.controller.command.Command;
 import com.sandromax.honestbank.controller.until.constants.Pages;
+import com.sandromax.honestbank.domain.account.Account;
 import com.sandromax.honestbank.domain.account.NewAccountRequest;
 import com.sandromax.honestbank.domain.service.BCrypt;
 import com.sandromax.honestbank.domain.service.log.FileLogger;
+import com.sandromax.honestbank.domain.service.log.Logger;
 import com.sandromax.honestbank.domain.user.Admin;
+import com.sandromax.honestbank.model.dao.impl.AccountDao;
 import com.sandromax.honestbank.model.dao.impl.AdminDao;
 import com.sandromax.honestbank.model.dao.impl.NewAccountRequestDao;
 
@@ -14,19 +17,21 @@ import javax.servlet.http.HttpSession;
 import java.util.LinkedList;
 
 public class CommandAdminSignIn implements Command {
+
+    private Logger logger = new FileLogger();
+
     @Override
     public String execute(HttpServletRequest request) {
         String page;
 
         if(authorizeAdmin(request)) {
             page = Pages.ADMIN_CABINET;
-
-            LinkedList<NewAccountRequest> requests = getAllNotConfirmedRequests();
-            request.setAttribute("requests", requests);
+            setParams(request, getAllNotConfirmedRequests(), getAllActiveAccounts());
         }
         else {
             page = Pages.ADMIN_SIGN_IN;
-
+            logger.log("Error! Wrong email or password.");
+            request.setAttribute("message", "Error! Wrong email or password.");
         }
 
         return page;
@@ -63,9 +68,7 @@ public class CommandAdminSignIn implements Command {
 
     private LinkedList<NewAccountRequest> getAllNotConfirmedRequests() {
         NewAccountRequestDao dao = new NewAccountRequestDao(new FileLogger());
-        LinkedList<NewAccountRequest> requests = dao.findAllNotConfirmed();
-
-        return requests;
+        return dao.findAllNotConfirmed();
     }
 
     private void sessionLogOut(HttpServletRequest request) {
@@ -73,5 +76,22 @@ public class CommandAdminSignIn implements Command {
         if(session != null) {
             session.invalidate();
         }
+    }
+
+//    private LinkedList<NewAccountRequest> createNewRequestList() {
+//        NewAccountRequestDao dao = new NewAccountRequestDao(new FileLogger());
+//        LinkedList<NewAccountRequest> requests = dao.findAllNotConfirmed();
+//
+//        return requests;
+//    }
+
+    private LinkedList<Account> getAllActiveAccounts() {
+        AccountDao accountDao = new AccountDao(logger);
+        return accountDao.findAll();
+    }
+
+    private void setParams(HttpServletRequest request, LinkedList<NewAccountRequest> newAccountRequests, LinkedList<Account> activeAccounts) {
+        request.setAttribute("requests", newAccountRequests);
+        request.setAttribute("active_accounts", activeAccounts);
     }
 }

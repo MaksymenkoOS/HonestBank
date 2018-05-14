@@ -25,7 +25,7 @@
         <label>
             Ваш пароль
             <input type="password" name="password" placeholder="5+ символов" required>
-            ${error_message}
+            ${message}
         </label>
     </fieldset>
     <fieldset class="signin_action">

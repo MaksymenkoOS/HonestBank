@@ -5,6 +5,7 @@ import com.sandromax.honestbank.domain.user.User;
 import java.time.LocalDate;
 import java.util.DoubleSummaryStatistics;
 import java.util.LinkedList;
+import java.util.Random;
 
 /**
  * Created by sandro on 26.04.18.
@@ -39,6 +40,10 @@ public class Account {
     public Account(AccountType type, User user) {
         this.type = type;
         this.user = user;
+        balance = 0.0;
+        validityFrom = LocalDate.now();
+        validityTo = LocalDate.now().plusYears(1);
+        rate = 10;
     }
 
     /**
@@ -179,5 +184,12 @@ public class Account {
      */
     public void setHistory(LinkedList<Transaction> history) {
         this.history = history;
+    }
+
+    /**
+     * Setter rate
+     */
+    public void setRate(double rate) {
+        this.rate = rate;
     }
 }
