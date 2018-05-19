@@ -34,14 +34,13 @@ public class UserDao implements GenericDao<User> {
     public int create(User entity) {
 
         int newGeneratedId = 0;
-        String passHash = BCrypt.hashpw(entity.getPass(), BCrypt.gensalt(13));
 
         try(Connection connection = ConnectionPool.getConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_CREATE_USER, Statement.RETURN_GENERATED_KEYS)) {
 
             statement.setString(1, entity.getName());
             statement.setString(2, entity.getEmail());
-            statement.setString(3, passHash);
+            statement.setString(3, entity.getPass());
 
             statement.executeUpdate();
             logger.log("user: " + entity.getName() + " was successfully registered");

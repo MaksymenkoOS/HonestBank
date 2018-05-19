@@ -3,6 +3,7 @@ package com.sandromax.honestbank.controller.command.impl;
 import com.sandromax.honestbank.controller.command.Command;
 import com.sandromax.honestbank.controller.until.constants.Pages;
 import com.sandromax.honestbank.domain.account.Account;
+import com.sandromax.honestbank.domain.service.BCrypt;
 import com.sandromax.honestbank.domain.service.log.FileLogger;
 import com.sandromax.honestbank.domain.user.Admin;
 import com.sandromax.honestbank.domain.user.User;
@@ -22,31 +23,27 @@ public class CommandUserSignUp implements Command {
         String nameParam = request.getParameter("name");
         String emailParam = request.getParameter("email");
         String passParam = request.getParameter("pass");
-
-        System.out.println("email: " + emailParam + ", name: " + nameParam + " password: " + passParam);
+        String passHash = BCrypt.hashpw(passParam, BCrypt.gensalt(13));
 
         UserDao userDao = new UserDao(new FileLogger());
-        User user = new User(nameParam, emailParam, passParam);
+        User user = new User(nameParam, emailParam, passHash);
 
         if(userDao.findByEmail(emailParam) == null) {
             userDao.create(user);
 
             sessionLogOut(request);
-
             HttpSession session = request.getSession();
-            session.setAttribute("user", user);
 
-            user = null;    //  todo Ask: how to kill user object?
+            user.clearPass();
+            session.setAttribute("user", user);
         }
         else {
             page = Pages.USER_SIGN_UP;
             String errorMessage = "email has already been registered";
-            request.setAttribute("error_message", errorMessage);
-            user = null;
+            request.setAttribute("message", errorMessage);
         }
 
         return page;
-
     }
 
     private void sessionLogOut(HttpServletRequest request) {
