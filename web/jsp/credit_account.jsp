@@ -10,21 +10,98 @@
 <html>
 <head>
     <title>Credit</title>
+    <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
 
-<h1>Credit Account</h1>
-
 <header>
-    <div>User: ${user.getName()}</div>
-    <a href="/controller?command=sign_out">Sign Out</a>
+    <div>
+        <img src="../img/honest_512.png" alt="logo">
+    </div>
+    <div>
+        <h1>Credit Account</h1>
+    </div>
+    <div>
+        <div>User: ${user.getName()}</div>
+        <div><a href="/controller?command=sign_out">Sign Out</a></div>
+        <div><a href="/controller?command=user_cabinet_page">to Cabinet</a></div>
+    </div>
 </header>
-<div class="account_operations">
-    <h3>Operations</h3>
 
-    <a href="/controller?command=transfer_page">Transfer</a>
-    <a href="/controller?command=user_cabinet_page">Cabinet</a>
-    <a href="/controller?command=new_account">New</a>
+<h3>Operations</h3>
+<div class="account_operations">
+    <div>
+        <form action="/controller?command=transfer" method="post">
+            <p><b>Transfer to account: </b></p>
+            <input type="text" name="recipient" placeholder="recipient account">
+            <input type="submit" value="Transfer">
+        </form>
+        <%--<a href="/controller?command=transfer_page">Transfer</a>--%>
+    </div>
+
+    <div>
+        <%--<p><b>Request For Opening An Account</b></p>--%>
+        <%--<form action="/controller?command=new_account_request">--%>
+            <%--<select name="rate" id="rate_id">--%>
+                <%--<option value="5">5%</option>--%>
+                <%--<option value="10">10%</option>--%>
+                <%--<option value="15">15%</option>--%>
+                <%--<option value="20">20%</option>--%>
+                <%--<option value="25">25%</option>--%>
+                <%--<option value="30">30%</option>--%>
+            <%--</select>--%>
+            <%--<select name="limit" id="limit_id">--%>
+                <%--<option value="1000">1000</option>--%>
+                <%--<option value="5000">5000</option>--%>
+                <%--<option value="10000">10000</option>--%>
+                <%--<option value="50000">50000</option>--%>
+                <%--<option value="100000">100000</option>--%>
+            <%--</select>--%>
+            <%--<input type="submit" value="New Account Request">--%>
+        <%--</form>--%>
+
+        <p><b>Request For Opening An Account</b></p>
+        <form action="/controller?command=new_account_request" method="post">
+            <fieldset>
+                <label>
+                    Rate
+                    <%--<input type="email" name="email" placeholder="your@mail.com" required>--%>
+                </label>
+                <select name="rate" id="rate_id2">
+                    <option value="5">5%</option>
+                    <option value="10">10%</option>
+                    <option value="15">15%</option>
+                    <option value="20">20%</option>
+                    <option value="25">25%</option>
+                    <option value="30">30%</option>
+                </select>
+                <label>
+                    Credit Limit
+                    <%--<input type="password" name="password" placeholder="5+ символов" required>--%>
+                    <%--${message}--%>
+                </label>
+                <select name="limit" id="limit_id2">
+                    <option value="1000">1000</option>
+                    <option value="5000">5000</option>
+                    <option value="10000">10000</option>
+                    <option value="50000">50000</option>
+                    <option value="100000">100000</option>
+                </select>
+            </fieldset>
+            <fieldset class="signin_action">
+                <input class="btn_fill" type="submit" name="submit" value="New Account Request">
+                <%--<label class="container">Запомнить--%>
+                    <%--<input type="checkbox" checked="checked">--%>
+                    <%--<span class="checkmark"></span>--%>
+                <%--</label>--%>
+            </fieldset>
+        </form>
+    </div>
+
+    <div class="message">
+        <h5>Messages: </h5>
+        ${message}
+    </div>
 </div>
 
 <div class="account_info">
@@ -47,17 +124,12 @@
                 <td>${item.getUser().getName()}</td>
                 <td>${item.getUser().getEmail()}</td>
                 <td>${item.getBalance()}</td>
-                <td>${item.getRate()}</td>
+                <td>${item.getRate()}%</td>
                 <td>${item.getValidityFrom()}</td>
                 <td>${item.getValidityTo()}</td>
             </tr>
         </c:forEach>
     </table>
-
-</div>
-<div class="message">
-    <h4>Messages</h4>
-    ${message}
 </div>
 
 </body>

@@ -8,6 +8,7 @@ import com.sandromax.honestbank.domain.service.log.FileLogger;
 import com.sandromax.honestbank.domain.service.log.Logger;
 import com.sandromax.honestbank.domain.user.User;
 import com.sandromax.honestbank.model.dao.impl.AccountDao;
+import com.sun.istack.internal.NotNull;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -37,7 +38,7 @@ public class CommandCreditAccount implements Command {
         return page;
     }
 
-    private void init(HttpServletRequest request) {
+    private void init( HttpServletRequest request) {
         session = request.getSession();
         user = (User) session.getAttribute("user");
 

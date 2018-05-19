@@ -67,8 +67,10 @@ public class CommandAdminSignIn implements Command {
     }
 
     private LinkedList<NewAccountRequest> getAllNotConfirmedRequests() {
-        NewAccountRequestDao dao = new NewAccountRequestDao(new FileLogger());
-        return dao.findAllNotConfirmed();
+        NewAccountRequestDao dao = new NewAccountRequestDao(logger);
+        LinkedList<NewAccountRequest> requests = dao.findAllNotConfirmed();
+//        if(requests)
+        return requests;
     }
 
     private void sessionLogOut(HttpServletRequest request) {

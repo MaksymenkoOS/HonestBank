@@ -10,7 +10,6 @@ import com.sandromax.honestbank.model.dao.connection.ConnectionPool;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.LinkedList;
-import java.util.List;
 
 public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
 
@@ -20,12 +19,14 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
 
     private Logger logger;
 
-    private static final String SQL_CREATE_NEW_ACCOUNT_REQUEST = "INSERT INTO new_account_request(type_id, user_id, date, is_confirmed) VALUES(?, ?, ?, ?);";
+    private static final String SQL_CREATE_NEW_ACCOUNT_REQUEST = "INSERT INTO new_account_request(type_id, user_id, date, is_accepted, is_declined, rate, credit_limit) VALUES(?, ?, ?, false, false, ?, ?);";
     private static final String SQL_FIND_ALL_ACCOUNT_REQUESTS = "SELECT * FROM new_account_request;";
     private static final String SQL_FIND_ACCOUNT_REQUEST_BY_ID = "SELECT * FROM new_account_request WHERE id = ?;";
-    private static final String SQL_FIND_ALL_ACCOUNT_REQUESTS_NOT_CONFIRMED = "SELECT * FROM new_account_request WHERE is_confirmed = false;";
-    private static final String SQL_FIND_ACCOUNT_REQUEST_BY_TYPE_ID_AND_USER_ID_NOT_CONFIRMED = "SELECT id FROM new_account_request WHERE type_id = ? AND user_id = ? AND is_confirmed = false;";
-    private static final String SQL_SET_CONFIRMED_BY_ID = "UPDATE new_account_request SET is_confirmed = true WHERE id = ?;";
+    private static final String SQL_FIND_ALL_ACCOUNT_REQUESTS_NOT_CONFIRMED = "SELECT * FROM new_account_request WHERE is_accepted = false AND is_declined = false;";
+    private static final String SQL_FIND_ACCOUNT_REQUEST_BY_TYPE_ID_AND_USER_ID_NOT_CONFIRMED = "SELECT id FROM new_account_request WHERE type_id = ? AND user_id = ? AND is_accepted = false AND is_declined = false;";
+    private static final String SQL_SET_ACCEPTED_BY_ID = "UPDATE new_account_request SET is_accepted = true WHERE id = ?;";
+    private static final String SQL_SET_DECLINED_BY_ID = "UPDATE new_account_request SET is_declined = true WHERE id = ?;";
+    private static final String SQL_FIND_ALL_DECLINED = "SELECT * FROM new_account_request WHERE is_accepted = false AND is_declined = true;";
 
     @Override
     public int create(NewAccountRequest entity) {
@@ -49,7 +50,8 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
             statement.setInt(1, typeId);
             statement.setInt(2, userId);
             statement.setDate(3, Date.valueOf(LocalDate.now()));
-            statement.setBoolean(4, false);
+            statement.setDouble(4, entity.getRate());
+            statement.setDouble(5, entity.getLimit());
 
             statement.executeUpdate();
 
@@ -80,7 +82,10 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
                 int typeId = resultSet.getInt(2);
                 int userId = resultSet.getInt(3);
                 LocalDate date = resultSet.getDate(4).toLocalDate();
-                boolean isConfirmed = resultSet.getBoolean(5);
+                boolean isAccepted = resultSet.getBoolean(5);
+                boolean isDeclined = resultSet.getBoolean(6);
+                double rate = resultSet.getDouble(7);
+                double limit = resultSet.getDouble(8);
 
                 AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
                 AccountType accountType = accountTypeDao.findById(typeId);
@@ -88,7 +93,7 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
                 UserDao userDao = new UserDao(logger);
                 User user = userDao.findById(userId);
 
-                NewAccountRequest newAccountRequest = new NewAccountRequest(id, accountType, user, date, isConfirmed);
+                NewAccountRequest newAccountRequest = new NewAccountRequest(id, accountType, user, date, isAccepted, isDeclined, rate, limit);
                 requests.add(newAccountRequest);
             }
 
@@ -117,7 +122,10 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
                 int typeId = resultSet.getInt(2);
                 int userId = resultSet.getInt(3);
                 LocalDate date = resultSet.getDate(4).toLocalDate();
-                boolean isConfirmed = resultSet.getBoolean(5);
+                boolean isAccepted = resultSet.getBoolean(5);
+                boolean isDeclined = resultSet.getBoolean(6);
+                double rate = resultSet.getDouble(7);
+                double limit = resultSet.getDouble(8);
 
                 AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
                 AccountType accountType = accountTypeDao.findById(typeId);
@@ -125,7 +133,7 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
                 UserDao userDao = new UserDao(logger);
                 User user = userDao.findById(userId);
 
-                newAccountRequest = new NewAccountRequest(id, accountType, user, date, isConfirmed);
+                newAccountRequest = new NewAccountRequest(id, accountType, user, date, isAccepted, isDeclined, rate, limit);
             }
 
         } catch (SQLException e) {
@@ -166,7 +174,10 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
                 int typeId = resultSet.getInt(2);
                 int userId = resultSet.getInt(3);
                 LocalDate date = resultSet.getDate(4).toLocalDate();
-                boolean isConfirmed = resultSet.getBoolean(5);
+                boolean isAccepted = resultSet.getBoolean(5);
+                boolean isDeclined = resultSet.getBoolean(6);
+                double rate = resultSet.getDouble(7);
+                double limit = resultSet.getDouble(8);
 
                 AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
                 AccountType accountType = accountTypeDao.findById(typeId);
@@ -174,7 +185,7 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
                 UserDao userDao = new UserDao(logger);
                 User user = userDao.findById(userId);
 
-                NewAccountRequest newAccountRequest = new NewAccountRequest(id, accountType, user, date, isConfirmed);
+                NewAccountRequest newAccountRequest = new NewAccountRequest(id, accountType, user, date, isAccepted, isDeclined, rate, limit);
                 requests.add(newAccountRequest);
             }
 
@@ -234,7 +245,7 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
     public boolean setConfirmedById(int id) {
 
         try(Connection connection = ConnectionPool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_SET_CONFIRMED_BY_ID)) {
+            PreparedStatement statement = connection.prepareStatement(SQL_SET_ACCEPTED_BY_ID)) {
 
             statement.setInt(1, id);
 
@@ -245,5 +256,57 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
         }
 
         return false;
+    }
+
+    public boolean setDeclinedById(int id) {
+        try(Connection connection = ConnectionPool.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_SET_DECLINED_BY_ID)) {
+
+            statement.setInt(1, id);
+
+            return statement.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public LinkedList<NewAccountRequest> findAllDeclined() {
+        LinkedList<NewAccountRequest> requests = new LinkedList<>();
+        ResultSet resultSet = null;
+
+        try(Connection connection = ConnectionPool.getConnection();
+            Statement statement = connection.createStatement()) {
+            resultSet = statement.executeQuery(SQL_FIND_ALL_DECLINED);
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                int typeId = resultSet.getInt(2);
+                int userId = resultSet.getInt(3);
+                LocalDate date = resultSet.getDate(4).toLocalDate();
+                boolean isAccepted = resultSet.getBoolean(5);
+                boolean isDeclined = resultSet.getBoolean(6);
+                double rate = resultSet.getDouble(7);
+                double limit = resultSet.getDouble(8);
+
+                AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
+                AccountType accountType = accountTypeDao.findById(typeId);
+
+                UserDao userDao = new UserDao(logger);
+                User user = userDao.findById(userId);
+
+                NewAccountRequest newAccountRequest = new NewAccountRequest(id, accountType, user, date, isAccepted, isDeclined, rate, limit);
+                requests.add(newAccountRequest);
+            }
+
+            logger.log("found " + requests.size() + " requests.");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return requests;
     }
 }

@@ -21,8 +21,9 @@ public enum CommandList {
     USER_CABINET_PAGE(new CommandUserCabinetPage()),
 //    ADMIN_CABINET_PAGE(new CommandAdminCabinetPage()),
     SIGN_OUT(new CommandSignOut()),
-    NEW_ACCOUNT(new CommandNewAccount()),
-    CONFIRM_REQUEST(new CommandConfirmRequest());
+    NEW_ACCOUNT_REQUEST(new CommandNewAccountRequest()),
+    ACCEPT_REQUEST(new CommandAcceptRequest()),
+    DECLINE_REQUEST(new CommandDeclineRequest());
 
     private CommandList(Command command) {
         this.command = command;

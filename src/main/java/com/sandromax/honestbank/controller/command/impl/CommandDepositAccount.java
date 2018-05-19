@@ -17,7 +17,6 @@ public class CommandDepositAccount implements Command {
 
     User user;
     AccountType accountType = AccountType.DEPOSIT;
-    Account account;
     AccountDao accountDao;
     HttpSession session;
     Logger logger = new FileLogger();

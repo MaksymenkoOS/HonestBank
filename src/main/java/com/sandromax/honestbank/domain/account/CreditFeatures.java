@@ -4,46 +4,53 @@ public class CreditFeatures {
 
     private int accountId;
     private double creditLimit;
-    private double accruedInterest;
+    private double indebtedness;
 
-
+    /**
+     * Constructors
+     */
     public CreditFeatures() {
     }
 
-    public CreditFeatures(double creditLimit, double accruedInterest) {
+    public CreditFeatures(double creditLimit, double indebtedness) {
         this.creditLimit = creditLimit;
-        this.accruedInterest = accruedInterest;
+        this.indebtedness = indebtedness;
     }
 
-    public CreditFeatures(int accountId, double creditLimit, double accruedInterest) {
+    public CreditFeatures(int accountId, double creditLimit, double indebtedness) {
         this.accountId = accountId;
         this.creditLimit = creditLimit;
-        this.accruedInterest = accruedInterest;
+        this.indebtedness = indebtedness;
     }
 
+
+    /**
+     * Getters
+     */
+    public int getAccountId() {
+        return accountId;
+    }
 
     public double getCreditLimit() {
         return creditLimit;
     }
 
-    public double getAccruedInterest() {
-        return accruedInterest;
+    public double getIndebtedness() {
+        return indebtedness;
     }
 
-    public int getAccountId() {
-        return accountId;
+    /**
+     * Setters
+     */
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
     }
-
 
     public void setCreditLimit(double creditLimit) {
         this.creditLimit = creditLimit;
     }
 
-    public void setAccruedInterest(double accruedInterest) {
-        this.accruedInterest = accruedInterest;
-    }
-
-    public void setAccountId(int accountId) {
-        this.accountId = accountId;
+    public void setIndebtedness(double indebtedness) {
+        this.indebtedness = indebtedness;
     }
 }

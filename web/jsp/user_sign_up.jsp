@@ -22,11 +22,11 @@
         </label>
         <label>
             Ваше полное имя
-            <input type="text" name="name" placeholder="Александр Сокур" required>
+            <input type="text" name="name" placeholder="Benjamin Franklin" required>
         </label>
         <label>
             Ваш пароль
-            <input type="password" name="pass" placeholder="5+ символов" required>
+            <input type="password" name="pass" placeholder="5+ symbols" required>
             ${error_message}
         </label>
     </fieldset>

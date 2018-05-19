@@ -14,6 +14,11 @@ public class DepositAccount extends Account implements IAccount {
 //    private double depositRate;
 //    private LinkedList<History> replenishmentHistory;
 
+    /**
+     * доход по процентам
+     */
+    double interestIncome;
+
 
     public DepositAccount() {
     }

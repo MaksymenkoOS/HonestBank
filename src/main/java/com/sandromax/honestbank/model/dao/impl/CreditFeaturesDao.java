@@ -7,7 +7,6 @@ import com.sandromax.honestbank.model.dao.connection.ConnectionPool;
 
 import java.sql.*;
 import java.util.LinkedList;
-import java.util.List;
 
 public class CreditFeaturesDao implements GenericDao<CreditFeatures> {
 
@@ -17,11 +16,11 @@ public class CreditFeaturesDao implements GenericDao<CreditFeatures> {
 
     private Logger logger;
 
-    private static final String SQL_CREATE_CREDIT_FEATURES = "INSERT INTO credit_features (account_id, credit_limit, accrued_interest) VALUES(?, ?, ?);";
+    private static final String SQL_CREATE_CREDIT_FEATURES = "INSERT INTO credit_features (account_id, credit_limit, indebtedness) VALUES(?, ?, ?);";
     private static final String SQL_FIND_ALL_CREDIT_FEATURES = "SELECT * FROM credit_features;";
     private static final String SQL_FIND_CREDIT_FEATURES_BY_ID = "SELECT * FROM credit_features WHERE account_id = ?;";
 
-    private static final String SQL_UPDATE_CREDIT_FEATURES = "UPDATE credit_features SET account_id = ?, credit_limit ?, accrued_interest = ? WHERE account_id = ?;";
+    private static final String SQL_UPDATE_CREDIT_FEATURES = "UPDATE credit_features SET account_id = ?, credit_limit ?, indebtedness = ? WHERE account_id = ?;";
     private static final String SQL_DELETE_CREDIT_FEATURES = "DELETE FROM credit_features WHERE account_id = ?;";
 
 
@@ -35,7 +34,7 @@ public class CreditFeaturesDao implements GenericDao<CreditFeatures> {
 
             statement.setInt(1, entity.getAccountId());
             statement.setDouble(2, entity.getCreditLimit());
-            statement.setDouble(3, entity.getAccruedInterest());
+            statement.setDouble(3, entity.getIndebtedness());
 
             statement.execute();
 
@@ -123,7 +122,7 @@ public class CreditFeaturesDao implements GenericDao<CreditFeatures> {
 
             statement.setInt(1, entity.getAccountId());
             statement.setDouble(2, entity.getCreditLimit());
-            statement.setDouble(3, entity.getAccruedInterest());
+            statement.setDouble(3, entity.getIndebtedness());
 
             result = statement.execute();
         } catch (SQLException e) {

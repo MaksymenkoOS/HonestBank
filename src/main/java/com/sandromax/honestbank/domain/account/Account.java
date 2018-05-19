@@ -16,12 +16,14 @@ public class Account {
     private AccountType type;
 
     private User user;
+
     private double balance;
+    private double rate;
+
 
     private LocalDate validityFrom;
     private LocalDate validityTo;
 
-    private double rate;
 
     private LinkedList<Transaction> history;
 
@@ -37,13 +39,13 @@ public class Account {
      * @param type
      * @param user
      */
-    public Account(AccountType type, User user) {
+    public Account(AccountType type, User user, double balance, double rate) {
         this.type = type;
         this.user = user;
-        balance = 0.0;
+        this.balance = balance;
         validityFrom = LocalDate.now();
         validityTo = LocalDate.now().plusYears(1);
-        rate = 10;
+        this.rate = rate;
     }
 
     /**
@@ -119,6 +121,14 @@ public class Account {
     }
 
     /**
+     * Getter rate
+     * @return  credit or deposit rate
+     */
+    public double getRate() {
+        return rate;
+    }
+
+    /**
      * Getter validityFrom
      * @return  date and time of account opening
      */
@@ -132,14 +142,6 @@ public class Account {
      */
     public LocalDate getValidityTo() {
         return validityTo;
-    }
-
-    /**
-     * Getter rate
-     * @return  credit or deposit rate
-     */
-    public double getRate() {
-        return rate;
     }
 
     /**
@@ -171,6 +173,13 @@ public class Account {
     }
 
     /**
+     * Setter rate
+     */
+    public void setRate(double rate) {
+        this.rate = rate;
+    }
+
+    /**
      * Setter validityTo
      * @param validityTo    for prolongation
      */
@@ -184,12 +193,5 @@ public class Account {
      */
     public void setHistory(LinkedList<Transaction> history) {
         this.history = history;
-    }
-
-    /**
-     * Setter rate
-     */
-    public void setRate(double rate) {
-        this.rate = rate;
     }
 }

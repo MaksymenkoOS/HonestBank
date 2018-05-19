@@ -10,14 +10,25 @@
 <html>
 <head>
     <title>Admin Cabinet</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/admin_cabinet.css">
 </head>
 <body>
-<h1>Admin Cabinet</h1>
 
 <header>
-    <div>Admin: ${admin.getEmail()}</div>
-    <a href="/controller?command=sign_out">Sign Out</a>
+    <div>
+        <img src="../img/Honest_logo-400x284.png" alt="logo">
+    </div>
+    <div>
+        <h1>Admin Cabinet</h1>
+    </div>
+    <div>
+        <div>Admin: ${admin.getEmail()}</div>
+        <a href="/controller?command=sign_out">Sign Out</a>
+    </div>
 </header>
+
+
 <h3>Accounts Opening Requests</h3>
 <div class="requests">
     <table>
@@ -25,6 +36,9 @@
             <th>ID</th>
             <th>TYPE</th>
             <th>USER</th>
+            <th>DATE</th>
+            <th>RATE</th>
+            <th>LIMIT(only for credit)</th>
         </tr>
         <c:forEach items="${requests}" var="item">
             <tr>
@@ -32,23 +46,36 @@
                 <td>${item.getAccountType()}</td>
                 <td>${item.getUser().getEmail()}</td>
                 <td>${item.getDate()}</td>
-                <td>
-                    <a href="/controller?command=confirm_request&request_id=${item.getIdInDb()}">
-                        <input type="button" value="Confirm">
-                    </a>
-                </td>
+                <td>${item.getRate()}%</td>
+                <td>${item.getLimit()}</td>
+                    <%--<form action="/controller?command=confirm_request&request_id=${item.getIdInDb()}">--%>
+                        <%--<select name="rate" id="rate_id">--%>
+                            <%--<option value="5">5</option>--%>
+                            <%--<option value="10">10</option>--%>
+                            <%--<option value="15">15</option>--%>
+                            <%--<option value="20">20</option>--%>
+                            <%--<option value="25">25</option>--%>
+                            <%--<option value="30">30</option>--%>
+                        <%--</select>--%>
+                        <%--<select name="limit" id="limit_id">--%>
+                            <%--<option value="0">0</option>--%>
+                            <%--<option value="1000">1000</option>--%>
+                            <%--<option value="5000">5000</option>--%>
+                            <%--<option value="10000">10000</option>--%>
+                            <%--<option value="50000">50000</option>--%>
+                            <%--<option value="100000">100000</option>--%>
+                        <%--</select>--%>
+                        <%--<input type="submit" value="Confirm">--%>
+                    <%--</form>--%>
+                <td><a href="/controller?command=accept_request&request_id=${item.getIdInDb()}"><button>Accept</button></a></td>
+                <td><a href="/controller?command=decline_request&request_id=${item.getIdInDb()}"><button>Decline</button></a></td>
             </tr>
         </c:forEach>
     </table>
 </div>
 
-<div class="message">
-    <h4>Messages</h4>
-    ${message}
-</div>
-
 <div class="active_account">
-    <h4>Active Accounts</h4>
+    <h3>Active Accounts</h3>
     <table>
         <tr>
             <th>ID</th>
@@ -67,13 +94,18 @@
                 <td>${item.getUser().getName()}</td>
                 <td>${item.getUser().getEmail()}</td>
                 <td>${item.getBalance()}</td>
-                <td>${item.getRate()}</td>
+                <td>${item.getRate()}%</td>
                 <td>${item.getValidityFrom()}</td>
                 <td>${item.getValidityTo()}</td>
             </tr>
         </c:forEach>
     </table>
 
+</div>
+
+<div class="message">
+    <h5>Messages:</h5>
+    ${message}
 </div>
 
 </body>

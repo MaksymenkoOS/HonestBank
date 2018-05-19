@@ -36,7 +36,6 @@ public class CommandUserSignIn implements Command {
 //            session.setAttribute("user_name", user.getName());
                 user.clearPass();
                 session.setAttribute("user", user);
-                user = null;
             } else {
                 page = Pages.INDEX;
                 request.setAttribute("message", "wrong email or password");

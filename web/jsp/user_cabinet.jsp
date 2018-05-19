@@ -9,22 +9,33 @@
 <html>
 <head>
     <title>Cabinet</title>
+    <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
-<h1>Cabinet</h1>
-<header>
-    <div>User: ${user.getName()}</div>
-    <a href="/controller?command=sign_out">Sign Out</a>
-</header>
-<h3>ACCOUNTS</h3>
-<div class="accounts">
-    <a href="/controller?command=deposit_account">Deposit</a>
-    <a href="/controller?command=credit_account">Credit</a>
-</div>
 
-<div class="message">
-    <h4>Messages</h4>
-    ${message}
+<header>
+    <div>
+        <img src="../img/honest_512.png" alt="logo">
+    </div>
+    <div>
+        <h1>Cabinet</h1>
+    </div>
+    <div>
+        <div>User: ${user.getName()}</div>
+        <a href="/controller?command=sign_out">Sign Out</a>
+    </div>
+</header>
+<div class="footer">
+    <div class="accounts">
+        <h3>ACCOUNTS</h3>
+        <a href="/controller?command=deposit_account">Deposit</a>
+        <a href="/controller?command=credit_account">Credit</a>
+    </div>
+
+    <div class="message">
+        <h4>Messages</h4>
+        ${message}
+    </div>
 </div>
 
 </body>

@@ -20,11 +20,11 @@ public class AccountDao implements GenericDao<Account> {
 
     private Logger logger;
 
-    private static final String SQL_CREATE_ACCOUNT = "INSERT INTO account (type_id, user_id, balance, validity_from, validity_to, rate) VALUES(?, ?, ?, ?, ?, ?);";
+    private static final String SQL_CREATE_ACCOUNT = "INSERT INTO account (type_id, user_id, balance, rate, validity_from, validity_to) VALUES(?, ?, ?, ?, ?, ?);";
     private static final String SQL_FIND_ALL_ACCOUNTS = "SELECT * FROM account;";
     private static final String SQL_FIND_ACCOUNT_BY_ID = "SELECT * FROM account WHERE id = ?;";
 //    private static final String SQL_FIND_ACCOUNT_BY_NAME = "SELECT * FROM account WHERE name = ?;";
-    private static final String SQL_UPDATE_ACCOUNT = "UPDATE account SET type_id = ?, user_id = ?, balance = ?, validity_to = ?, rate = ? WHERE id = ?;";
+    private static final String SQL_UPDATE_ACCOUNT = "UPDATE account SET type_id = ?, user_id = ?, balance = ?, rate = ?, validity_to = ? WHERE id = ?;";
     private static final String SQL_DELETE_ACCOUNT = "DELETE FROM account WHERE id = ?;";
     private static final String SQL_FIND_ACCOUNTS_BY_USER_ID = "SELECT * FROM account WHERE user_id = ?;";
     private static final String SQL_FIND_ACCOUNTS_BY_USER_ID_AND_TYPE_ID = "SELECT * FROM account WHERE user_id = ? AND type_id = ?;";
@@ -45,13 +45,14 @@ public class AccountDao implements GenericDao<Account> {
 
             statement.setDouble(3, entity.getBalance());
 
+            statement.setDouble(4, entity.getRate());
+
             Date validityFrom = Date.valueOf(entity.getValidityFrom());
-            statement.setDate(4, validityFrom);
+            statement.setDate(5, validityFrom);
 
             Date validityTo = Date.valueOf(entity.getValidityTo());
-            statement.setDate(5, validityTo);
+            statement.setDate(6, validityTo);
 
-            statement.setDouble(6, entity.getRate());
 
             statement.executeUpdate();
 
@@ -61,8 +62,7 @@ public class AccountDao implements GenericDao<Account> {
                 newGeneratedId = rs.getInt(1);
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            logger.log("");
+            logger.log(e.getMessage());
         }
 
         return newGeneratedId;
@@ -78,23 +78,24 @@ public class AccountDao implements GenericDao<Account> {
             resultSet = statement.executeQuery(SQL_FIND_ALL_ACCOUNTS);
 
             while (resultSet.next()) {
-                int idInDb = resultSet.getInt(1);
+                int idInDb = resultSet.getInt("id");
 
-                int typeId = resultSet.getInt(2);
+                int typeId = resultSet.getInt("type_id");
                 AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
                 AccountType type = accountTypeDao.findById(typeId);
 
-                int userId = resultSet.getInt(3);
+                int userId = resultSet.getInt("user_id");
                 UserDao userDao = new UserDao(logger);
                 User user = userDao.findById(userId);
 
-                double balance = resultSet.getDouble(4);
+                double balance = resultSet.getDouble("balance");
 
-                LocalDate validityFrom = resultSet.getDate(5).toLocalDate();
+                double rate = resultSet.getDouble("rate");
 
-                LocalDate validityTo = resultSet.getDate(6).toLocalDate();
+                LocalDate validityFrom = resultSet.getDate("validity_from").toLocalDate();
 
-                double rate = resultSet.getDouble(7);
+                LocalDate validityTo = resultSet.getDate("validity_to").toLocalDate();
+
 
                 Account account = new Account(idInDb, type,
                 user, balance, validityFrom, validityTo, rate);
@@ -129,21 +130,22 @@ public class AccountDao implements GenericDao<Account> {
             while (resultSet.next()) {
 //                int idInDb = resultSet.getInt(1);
 
-                int typeId = resultSet.getInt(2);
+                int typeId = resultSet.getInt("type_id");
                 AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
                 AccountType type = accountTypeDao.findById(typeId);
 
-                int userId = resultSet.getInt(3);
+                int userId = resultSet.getInt("user_id");
                 UserDao userDao = new UserDao(logger);
                 User user = userDao.findById(userId);
 
-                double balance = resultSet.getDouble(4);
+                double balance = resultSet.getDouble("balance");
 
-                LocalDate validityFrom = resultSet.getDate(5).toLocalDate();
+                double rate = resultSet.getDouble("rate");
 
-                LocalDate validityTo = resultSet.getDate(6).toLocalDate();
+                LocalDate validityFrom = resultSet.getDate("validity_from").toLocalDate();
 
-                double rate = resultSet.getDouble(7);
+                LocalDate validityTo = resultSet.getDate("validity_to").toLocalDate();
+
 
                 account = new Account(id, type, user, balance, validityFrom, validityTo, rate);
             }
@@ -160,18 +162,6 @@ public class AccountDao implements GenericDao<Account> {
 
         return account;
     }
-//
-//    @Override
-//    public Account findByName(String name) {
-//        logger.log("method 'AccountDao.findByName(String name)' is not for use");
-//        return null;
-//    }
-//
-//    @Override
-//    public Account findBy(String columnName, String value) {
-//        logger.log("method 'AccountDao.findBy(String columnName, String value)' is not for use");
-//        return null;
-//    }
 
     @Override
     public boolean update(Account entity) {
@@ -189,10 +179,10 @@ public class AccountDao implements GenericDao<Account> {
 
             statement.setDouble(3, entity.getBalance());
 
-            Date validityTo = Date.valueOf(entity.getValidityTo());
-            statement.setDate(4, validityTo);
+            statement.setDouble(4, entity.getRate());
 
-            statement.setDouble(5, entity.getRate());
+            Date validityTo = Date.valueOf(entity.getValidityTo());
+            statement.setDate(5, validityTo);
 
             statement.setInt(6, entity.getIdInDb());
 
@@ -235,19 +225,20 @@ public class AccountDao implements GenericDao<Account> {
             resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                int idInDb = resultSet.getInt(1);
+                int idInDb = resultSet.getInt("id");
 
-                int typeId = resultSet.getInt(2);
+                int typeId = resultSet.getInt("type_id");
                 AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
                 AccountType type = accountTypeDao.findById(typeId);
 
-                double balance = resultSet.getDouble(4);
+                double balance = resultSet.getDouble("balance");
 
-                LocalDate validityFrom = resultSet.getDate(5).toLocalDate();
+                double rate = resultSet.getDouble("rate");
 
-                LocalDate validityTo = resultSet.getDate(6).toLocalDate();
+                LocalDate validityFrom = resultSet.getDate("validity_from").toLocalDate();
 
-                double rate = resultSet.getDouble(7);
+                LocalDate validityTo = resultSet.getDate("validity_to").toLocalDate();
+
 
                 Account account = new Account(idInDb, type, user, balance, validityFrom, validityTo, rate);
                 accounts.add(account);
@@ -288,19 +279,20 @@ public class AccountDao implements GenericDao<Account> {
             resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                int idInDb = resultSet.getInt(1);
+                int idInDb = resultSet.getInt("id");
 
 //                int typeId = resultSet.getInt(2);
 //                AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
 //                AccountType type = accountTypeDao.findById(typeId);
 
-                double balance = resultSet.getDouble(4);
+                double balance = resultSet.getDouble("balance");
 
-                LocalDate validityFrom = resultSet.getDate(5).toLocalDate();
+                double rate = resultSet.getDouble("rate");
 
-                LocalDate validityTo = resultSet.getDate(6).toLocalDate();
+                LocalDate validityFrom = resultSet.getDate("validity_from").toLocalDate();
 
-                double rate = resultSet.getDouble(7);
+                LocalDate validityTo = resultSet.getDate("validity_to").toLocalDate();
+
 
                 Account account = new Account(idInDb, type, user, balance, validityFrom, validityTo, rate);
                 accounts.add(account);
