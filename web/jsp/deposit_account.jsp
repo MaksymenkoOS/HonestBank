@@ -31,7 +31,19 @@
 <div class="account_operations">
     <h3>Operations</h3>
     <div>
-        <a href="/controller?command=replenishment_page">Replenishment</a>
+        <a href="/controller?command=replenishment_page">Replenishment Page</a>
+        <p><b>Request For Opening An Account</b></p>
+        <form action="/controller?command=replenishment" method="post">
+            <fieldset>
+                <label>
+                    Sum
+                </label>
+                <input type="text" name="sum" placeholder="Enter sum">
+            </fieldset>
+            <fieldset class="signin_action">
+                <input class="btn_fill" type="submit" name="submit" value="Confirm Replenish">
+            </fieldset>
+        </form>
     </div>
 
     <div>
@@ -125,6 +137,21 @@
                 <td>${item.getRate()}%</td>
                 <td>${item.getValidityFrom()}</td>
                 <td>${item.getValidityTo()}</td>
+                <td>
+                    <div>
+                        <form action="/controller?command=replenishment&account_id=${item.getIdInDb()}" method="post">
+                            <fieldset>
+                                <label>
+                                    Sum
+                                </label>
+                                <input type="text" name="sum" placeholder="Enter sum">
+                            </fieldset>
+                            <fieldset class="signin_action">
+                                <input class="btn_fill" type="submit" name="submit" value="Confirm Replenish">
+                            </fieldset>
+                        </form>
+                    </div>
+                </td>
             </tr>
         </c:forEach>
     </table>
