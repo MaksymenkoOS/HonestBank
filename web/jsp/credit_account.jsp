@@ -30,36 +30,15 @@
 
 <h3>Operations</h3>
 <div class="account_operations">
-    <div>
-        <form action="/controller?command=transfer" method="post">
-            <p><b>Transfer to account: </b></p>
-            <input type="text" name="recipient" placeholder="recipient account">
-            <input type="submit" value="Transfer">
-        </form>
-        <%--<a href="/controller?command=transfer_page">Transfer</a>--%>
-    </div>
-
-    <div>
-        <%--<p><b>Request For Opening An Account</b></p>--%>
-        <%--<form action="/controller?command=new_account_request">--%>
-            <%--<select name="rate" id="rate_id">--%>
-                <%--<option value="5">5%</option>--%>
-                <%--<option value="10">10%</option>--%>
-                <%--<option value="15">15%</option>--%>
-                <%--<option value="20">20%</option>--%>
-                <%--<option value="25">25%</option>--%>
-                <%--<option value="30">30%</option>--%>
-            <%--</select>--%>
-            <%--<select name="limit" id="limit_id">--%>
-                <%--<option value="1000">1000</option>--%>
-                <%--<option value="5000">5000</option>--%>
-                <%--<option value="10000">10000</option>--%>
-                <%--<option value="50000">50000</option>--%>
-                <%--<option value="100000">100000</option>--%>
-            <%--</select>--%>
-            <%--<input type="submit" value="New Account Request">--%>
+    <%--<div>--%>
+        <%--<form action="/controller?command=transfer" method="post">--%>
+            <%--<p><b>Transfer to account: </b></p>--%>
+            <%--<input type="text" name="recipient" placeholder="recipient account">--%>
+            <%--<input type="submit" value="PAY">--%>
         <%--</form>--%>
+    <%--</div>--%>
 
+    <div>
         <p><b>Request For Opening An Account</b></p>
         <form action="/controller?command=new_account_request" method="post">
             <fieldset>
@@ -127,6 +106,14 @@
                 <td>${item.getRate()}%</td>
                 <td>${item.getValidityFrom()}</td>
                 <td>${item.getValidityTo()}</td>
+                <td>
+                    <form action="/controller?command=transfer&account_id=${item.getIdInDb()}" method="post">
+                        <p><b>Transfer to account: </b></p>
+                        <input type="text" name="recipient" placeholder="recipient account">
+                        <input type="text" name="sum" placeholder="sum">
+                        <input type="submit" value="PAY">
+                    </form>
+                </td>
             </tr>
         </c:forEach>
     </table>

@@ -12,9 +12,9 @@ public class CreditFeatures {
     public CreditFeatures() {
     }
 
-    public CreditFeatures(double creditLimit, double indebtedness) {
+    public CreditFeatures(int accountId, double creditLimit) {
+        this.accountId = accountId;
         this.creditLimit = creditLimit;
-        this.indebtedness = indebtedness;
     }
 
     public CreditFeatures(int accountId, double creditLimit, double indebtedness) {

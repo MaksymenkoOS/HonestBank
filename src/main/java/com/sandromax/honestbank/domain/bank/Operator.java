@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -101,10 +102,59 @@ public class Operator {
         return result;
     }
 
-    public static boolean pay(Account sender, Account recipient, double sum) {
+    private static final String SQL_GET_BALANCE = "SELECT balance FROM account WHERE id = ?;";
+    private static final String SQL_GET_LIMIT = "SELECT credit_limit FROM credit_features WHERE id = ?;";
+    private static final String SQL_MINUS_BALANCE = "UPDATE account SET balance = balance - ? WHERE id = ?;";
+    private static final String SQL_PLUS_BALANCE = "UPDATE account SET balance = balance + ? WHERE id = ?;";
+
+    public boolean pay(int sender, int recipient, double sum) {
         boolean result = false;
+        ResultSet resultSet = null;
+        PreparedStatement statement = null;
+        double balance = 0.0;
+        double limit = 0.0;
 
+        try(Connection connection = ConnectionPool.getConnection()) {
 
+            statement = connection.prepareStatement(SQL_GET_BALANCE);
+
+            statement.setInt(1, sender);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                balance = resultSet.getDouble(1);
+            }
+
+            statement = connection.prepareStatement(SQL_GET_LIMIT);
+
+            statement.setInt(1, sender);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                limit = resultSet.getDouble(1);
+            }
+
+            if((balance - sum) < (limit - limit - limit)) {
+                logger.error("You can't transfer this sum. You will exceed the credit limit.");
+                return result;
+            } else {
+                connection.setAutoCommit(false);
+
+                statement = connection.prepareStatement(SQL_MINUS_BALANCE);
+                statement.setDouble(1, sum);
+                statement.setInt(2, sender);
+                int res = statement.executeUpdate();
+                if(res == 1) {
+                    statement = connection.prepareStatement(SQL_PLUS_BALANCE);
+                    statement.setDouble(1, sum);
+                    statement.setInt(2, recipient);
+                    res = statement.executeUpdate();
+                } else {
+                    logger.error("Can't change balance in ");// TODO: 21.05.18 To be continued ... 
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         return result;
     }

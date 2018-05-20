@@ -4,11 +4,13 @@ import com.sandromax.honestbank.controller.command.Command;
 import com.sandromax.honestbank.controller.until.constants.Pages;
 import com.sandromax.honestbank.domain.account.Account;
 import com.sandromax.honestbank.domain.account.AccountType;
+import com.sandromax.honestbank.domain.account.CreditFeatures;
 import com.sandromax.honestbank.domain.account.NewAccountRequest;
 import com.sandromax.honestbank.domain.service.log.FileLogger;
 import com.sandromax.honestbank.domain.service.log.Logger;
 import com.sandromax.honestbank.domain.user.User;
 import com.sandromax.honestbank.model.dao.impl.AccountDao;
+import com.sandromax.honestbank.model.dao.impl.CreditFeaturesDao;
 import com.sandromax.honestbank.model.dao.impl.NewAccountRequestDao;
 import com.sun.istack.internal.NotNull;
 
@@ -26,6 +28,8 @@ public class CommandAcceptRequest implements Command {
     AccountType type;
     AccountDao accountDao;
     User user;
+    
+    CreditFeaturesDao creditFeaturesDao;
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -63,6 +67,7 @@ public class CommandAcceptRequest implements Command {
             accountDao = new AccountDao(logger);
             user = newAccountRequest.getUser();
             type = newAccountRequest.getAccountType();
+            creditFeaturesDao = new CreditFeaturesDao(logger);
         } catch (NullPointerException n) {
             logger.log(n.getMessage());
         } catch (Exception e) {
@@ -88,16 +93,19 @@ public class CommandAcceptRequest implements Command {
 
             if(newAccountRequest != null) {
                 double rate = newAccountRequest.getRate();
-                double balance = newAccountRequest.getLimit();
+                double limit = newAccountRequest.getLimit();
 
-                Account newAccount = new Account(type, user, balance, rate);
+                Account newAccount = new Account(type, user, 0.0, rate);// TODO: 20.05.18 Change constructor
 
-//                AccountDao accountDao = new AccountDao(logger);
+                // TODO: 20.05.18 Need to lock tables(account, credit_features)
+                int accountId = accountDao.create(newAccount);
+                if(accountId != 0) {
+                    newAccount.setIdInDb(accountId);
 
-                //////////////////////////////
-                    int accountId = accountDao.create(newAccount);
-                    if(accountId != 0)
-                        newAccount.setIdInDb(accountId);
+                    CreditFeatures creditFeatures = new CreditFeatures(accountId, limit);
+                    creditFeaturesDao.create(creditFeatures);
+                }
+
 
             }
         } catch (Exception e) {

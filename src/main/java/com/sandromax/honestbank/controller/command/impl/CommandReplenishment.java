@@ -21,10 +21,11 @@ public class CommandReplenishment implements Command {
                 setParams(request);
                 page = Pages.CHECK;
             } else {
-                page = Pages.DEPOSIT_ACCOUNT;
+                page = Pages.USER_CABINET;
+                request.setAttribute("message", "Error! Replenish was not successful.");
             }
         }
-        System.out.println("page: " + page);
+//        System.out.println("page: " + page);
 
         return page;
     }
@@ -33,16 +34,16 @@ public class CommandReplenishment implements Command {
         boolean result = false;
 
         String accountIdParam = request.getParameter("account_id");
-        System.out.println("accountIdParam: " + accountIdParam);
+//        System.out.println("accountIdParam: " + accountIdParam);
         String sumParam = request.getParameter("sum");
-        System.out.println("sumParam: " + sumParam);
+//        System.out.println("sumParam: " + sumParam);
 
         try {
             accountId = Integer.parseInt(accountIdParam);
             sum = Double.parseDouble(sumParam);
 
-            System.out.println("accountId: " + accountId);
-            System.out.println("sum: " + sumParam);
+//            System.out.println("accountId: " + accountId);
+//            System.out.println("sum: " + sumParam);
 
             result = true;
         } catch (NullPointerException nullEx) {
@@ -57,13 +58,12 @@ public class CommandReplenishment implements Command {
     private boolean operation() {
         Operator operator = Operator.getInstance();
         boolean result = operator.pay(accountId, sum);
-        System.out.println("result(from CommandReplenishment.operation()): " + result);
+//        System.out.println("result(from CommandReplenishment.operation()): " + result);
 
         return result;
     }
 
     private void setParams(HttpServletRequest request) {
-        request.setAttribute("account_id", accountId);
-        request.setAttribute("sum", sum);
+        request.setAttribute("message", "Account " + accountId + " was successfully replenished to the amount of " + sum + ".");
     }
 }

@@ -18,7 +18,8 @@
 <a href="/controller?command=sign_out">Sign Out</a>
 
 
-<p>Account ${account_id} is successfully replenished to the amount of ${sum} </p>
+<%--<p>Account ${account_id} is successfully replenished to the amount of ${sum}</p>--%>
+<p>${message}</p>
 <p></p>
 </body>
 </html>
