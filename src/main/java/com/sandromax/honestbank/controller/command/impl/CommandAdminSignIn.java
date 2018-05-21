@@ -4,6 +4,7 @@ import com.sandromax.honestbank.controller.command.Command;
 import com.sandromax.honestbank.controller.until.constants.Pages;
 import com.sandromax.honestbank.domain.account.Account;
 import com.sandromax.honestbank.domain.account.NewAccountRequest;
+import com.sandromax.honestbank.domain.account.Transaction;
 import com.sandromax.honestbank.domain.service.BCrypt;
 import com.sandromax.honestbank.domain.service.log.FileLogger;
 import com.sandromax.honestbank.domain.service.log.Logger;
@@ -11,6 +12,7 @@ import com.sandromax.honestbank.domain.user.Admin;
 import com.sandromax.honestbank.model.dao.impl.AccountDao;
 import com.sandromax.honestbank.model.dao.impl.AdminDao;
 import com.sandromax.honestbank.model.dao.impl.NewAccountRequestDao;
+import com.sandromax.honestbank.model.dao.impl.TransactionDao;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,7 +28,7 @@ public class CommandAdminSignIn implements Command {
 
         if(authorizeAdmin(request)) {
             page = Pages.ADMIN_CABINET;
-            setParams(request, getAllNotConfirmedRequests(), getAllActiveAccounts());
+            setParams(request, getAllNotConfirmedRequests(), getAllActiveAccounts(), getAllTransactions());
         }
         else {
             page = Pages.ADMIN_SIGN_IN;
@@ -92,8 +94,14 @@ public class CommandAdminSignIn implements Command {
         return accountDao.findAll();
     }
 
-    private void setParams(HttpServletRequest request, LinkedList<NewAccountRequest> newAccountRequests, LinkedList<Account> activeAccounts) {
+    private LinkedList<Transaction> getAllTransactions() {
+        TransactionDao transactionDao = new TransactionDao(logger);
+        return transactionDao.findAll();
+    }
+
+    private void setParams(HttpServletRequest request, LinkedList<NewAccountRequest> newAccountRequests, LinkedList<Account> activeAccounts, LinkedList<Transaction> transactions) {
         request.setAttribute("requests", newAccountRequests);
         request.setAttribute("active_accounts", activeAccounts);
+        request.setAttribute("all_transactions", transactions);
     }
 }

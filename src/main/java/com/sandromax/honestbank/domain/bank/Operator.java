@@ -34,7 +34,7 @@ public class Operator {
     private static final String SQL_REPLENISH_QUERY = "UPDATE account SET balance = balance + ? WHERE id = ?;";
     private static final String SQL_CREATE_TRANSACTION_NOTATION = "INSERT INTO transaction(amount, sender_account_id, recipient_account_id) VALUES(?, ?, ?);";
 
-    public boolean pay(int accountId, double sum) {
+    public boolean pay(int accountId, double sum) throws SQLException {
         boolean result = false;
 
         Connection connection = null;
@@ -45,8 +45,8 @@ public class Operator {
 
             connection.setAutoCommit(false);
 
-            int isolation = connection.getTransactionIsolation();
-            System.out.println("transaction isolation: " + isolation);
+//            int isolation = connection.getTransactionIsolation();
+//            System.out.println("transaction isolation: " + isolation);
 
             statement.setDouble(1, sum);
             statement.setInt(2, accountId);
@@ -97,13 +97,21 @@ public class Operator {
             } catch (SQLException sqlExc) {
                 logger.error(sqlExc.getMessage());
             }
+        } finally {
+            if(statement != null) {
+                statement.close();
+            }
+            if(connection != null) {
+                connection.setAutoCommit(true);
+                connection.close();
+            }
         }
 
         return result;
     }
 
     private static final String SQL_GET_BALANCE = "SELECT balance FROM account WHERE id = ?;";
-    private static final String SQL_GET_LIMIT = "SELECT credit_limit FROM credit_features WHERE id = ?;";
+    private static final String SQL_GET_LIMIT = "SELECT credit_limit FROM credit_features WHERE account_id = ?;";
     private static final String SQL_MINUS_BALANCE = "UPDATE account SET balance = balance - ? WHERE id = ?;";
     private static final String SQL_PLUS_BALANCE = "UPDATE account SET balance = balance + ? WHERE id = ?;";
 
@@ -134,6 +142,7 @@ public class Operator {
 
             if((balance - sum) < (limit - limit - limit)) {
                 logger.error("You can't transfer this sum. You will exceed the credit limit.");
+                connection.rollback();
                 return result;
             } else {
                 connection.setAutoCommit(false);
@@ -142,18 +151,42 @@ public class Operator {
                 statement.setDouble(1, sum);
                 statement.setInt(2, sender);
                 int res = statement.executeUpdate();
+
                 if(res == 1) {
+                    res = 0;
                     statement = connection.prepareStatement(SQL_PLUS_BALANCE);
                     statement.setDouble(1, sum);
                     statement.setInt(2, recipient);
                     res = statement.executeUpdate();
+
+                    if(res ==1) {
+                        res = 0;
+                        statement = connection.prepareStatement(SQL_CREATE_TRANSACTION_NOTATION);
+                        statement.setDouble(1, sum);
+                        statement.setInt(2, sender);
+                        statement.setInt(3, recipient);
+                        res = statement.executeUpdate();
+                        if(res == 1) {
+                            result = true;
+                            connection.commit();
+                            logger.trace("Transfer from account: " + sender + " to account: " + recipient + " was successful. Transfer amount: " + sum + ".");
+                        } else {
+                            logger.error("Can't create transaction notation.");
+                            connection.rollback();
+                        }
+                    } else {
+                        logger.error("Can't change balance in recipient account");
+                        connection.rollback();
+                    }
                 } else {
-                    logger.error("Can't change balance in ");// TODO: 21.05.18 To be continued ... 
+                    logger.error("Can't change balance in sender account");
+                    connection.rollback();
                 }
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
+
         }
 
         return result;

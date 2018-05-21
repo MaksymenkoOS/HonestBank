@@ -6,6 +6,7 @@ import com.sandromax.honestbank.domain.bank.Operator;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.SQLException;
 
 public class CommandReplenishment implements Command {
     int accountId;
@@ -57,8 +58,13 @@ public class CommandReplenishment implements Command {
 
     private boolean operation() {
         Operator operator = Operator.getInstance();
-        boolean result = operator.pay(accountId, sum);
-//        System.out.println("result(from CommandReplenishment.operation()): " + result);
+        boolean result = false;
+        try {
+            result = operator.pay(accountId, sum);
+
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        }
 
         return result;
     }

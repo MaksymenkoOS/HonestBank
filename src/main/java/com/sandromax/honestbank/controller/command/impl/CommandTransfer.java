@@ -57,7 +57,6 @@ public class CommandTransfer implements Command {
     private boolean operation() {
         Operator operator = Operator.getInstance();
         boolean result = operator.pay(accountIdFrom, accountIdTo, sum);
-//        System.out.println("result(from CommandReplenishment.operation()): " + result);
 
         return result;
     }

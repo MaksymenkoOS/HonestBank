@@ -103,6 +103,33 @@
 
 </div>
 
+<div class="transactions">
+    <h4>All Transactions</h4>
+    <table>
+        <tr>
+            idInDb;
+            private LocalDateTime time_stamp;
+            private double amount;
+            private Account sender;
+            private Account recipient;
+            <th>ID</th>
+            <th>TIME STAMP</th>
+            <th>AMOUNT</th>
+            <th>SENDER ACCOUNT</th>
+            <th>RECIPIENT ACCOUNT</th>
+        </tr>
+        <c:forEach items="${all_transactions}" var="item">
+            <tr>
+                <td>${item.getIdInDb()}</td>
+                <td>${item.getTime_stamp()}</td>
+                <td>${item.getAmount()}</td>
+                <td>${item.getSender().getIdInDb()}</td>
+                <td>${item.getRecipient().getIdInDb()}</td>
+            </tr>
+        </c:forEach>
+    </table>
+</div>
+
 <div class="message">
     <h5>Messages:</h5>
     ${message}
