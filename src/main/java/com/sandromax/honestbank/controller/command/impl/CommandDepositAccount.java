@@ -46,7 +46,7 @@ public class CommandDepositAccount implements Command {
             return;
         }
 
-        accountDao = new AccountDao(logger);
+        accountDao = new AccountDao();
 
     }
 
@@ -56,7 +56,7 @@ public class CommandDepositAccount implements Command {
 
     private void setParams(HttpServletRequest request) {
         session.setAttribute("account_type", "deposit");
-        request.setAttribute("accounts", accounts);
+        session.setAttribute("deposit_accounts", accounts);
 
     }
 }

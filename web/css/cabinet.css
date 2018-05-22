@@ -1,0 +1,5 @@
+.block {
+    /*overflow: hidden;*/
+    height: 200px;
+    overflow-x: scroll;
+}

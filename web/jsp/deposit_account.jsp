@@ -28,92 +28,6 @@
     </div>
 </header>
 
-<div class="account_operations">
-    <h3>Operations</h3>
-    <div>
-        <a href="/controller?command=replenishment_page">Replenishment Page</a>
-        <p><b>Request For Opening An Account</b></p>
-        <form action="/controller?command=replenishment" method="post">
-            <fieldset>
-                <label>
-                    Sum
-                </label>
-                <input type="text" name="sum" placeholder="Enter sum">
-            </fieldset>
-            <fieldset class="signin_action">
-                <input class="btn_fill" type="submit" name="submit" value="Confirm Replenish">
-            </fieldset>
-        </form>
-    </div>
-
-    <div>
-        <%--<form action="/controller?command=new_account_request">--%>
-            <%--<select name="rate" id="rate_id">--%>
-                <%--<option value="5">5%</option>--%>
-                <%--<option value="10">10%</option>--%>
-                <%--<option value="15">15%</option>--%>
-                <%--<option value="20">20%</option>--%>
-                <%--<option value="25">25%</option>--%>
-                <%--<option value="30">30%</option>--%>
-            <%--</select>--%>
-            <%--&lt;%&ndash;<select name="limit" id="limit_id">&ndash;%&gt;--%>
-            <%--&lt;%&ndash;<option value="0">0</option>&ndash;%&gt;--%>
-            <%--&lt;%&ndash;<option value="1000">1000</option>&ndash;%&gt;--%>
-            <%--&lt;%&ndash;<option value="5000">5000</option>&ndash;%&gt;--%>
-            <%--&lt;%&ndash;<option value="10000">10000</option>&ndash;%&gt;--%>
-            <%--&lt;%&ndash;<option value="50000">50000</option>&ndash;%&gt;--%>
-            <%--&lt;%&ndash;<option value="100000">100000</option>&ndash;%&gt;--%>
-            <%--&lt;%&ndash;</select>&ndash;%&gt;--%>
-            <%--<input type="submit" value="New Account Request">--%>
-            <%--<a href="/controller?command=new_account_request">New</a>--%>
-        <%--</form>--%>
-
-        <p><b>Request For Opening An Account</b></p>
-        <form action="/controller?command=new_account_request" method="post">
-            <fieldset>
-                <label>
-                    Rate
-                    <%--<input type="email" name="email" placeholder="your@mail.com" required>--%>
-                </label>
-                <select name="rate" id="rate_id2">
-                    <option value="5">5%</option>
-                    <option value="10">10%</option>
-                    <option value="15">15%</option>
-                    <option value="20">20%</option>
-                    <option value="25">25%</option>
-                    <option value="30">30%</option>
-                </select>
-                <%--<label>--%>
-                    <%--Credit Limit--%>
-                    <%--&lt;%&ndash;<input type="password" name="password" placeholder="5+ символов" required>&ndash;%&gt;--%>
-                    <%--&lt;%&ndash;${message}&ndash;%&gt;--%>
-                <%--</label>--%>
-                <%--<select name="limit" id="limit_id2">--%>
-                    <%--<option value="1000">1000</option>--%>
-                    <%--<option value="5000">5000</option>--%>
-                    <%--<option value="10000">10000</option>--%>
-                    <%--<option value="50000">50000</option>--%>
-                    <%--<option value="100000">100000</option>--%>
-                <%--</select>--%>
-            </fieldset>
-            <fieldset class="signin_action">
-                <input class="btn_fill" type="submit" name="submit" value="New Deposit Account Request">
-                <%--<label class="container">Запомнить--%>
-                <%--<input type="checkbox" checked="checked">--%>
-                <%--<span class="checkmark"></span>--%>
-                <%--</label>--%>
-            </fieldset>
-        </form>
-
-    </div>
-
-    <div class="message">
-        <h5>Messages:</h5>
-        ${message}
-    </div>
-
-</div>
-
 <div class="account_info">
     <h3>Account Info</h3>
     <table>
@@ -127,7 +41,7 @@
             <th>OPENING DATE</th>
             <th>CLOSING DATE</th>
         </tr>
-        <c:forEach items="${accounts}" var="item">
+        <c:forEach items="${deposit_accounts}" var="item">
             <tr>
                 <td>${item.getIdInDb()}</td>
                 <td>${item.getType()}</td>
@@ -155,6 +69,37 @@
             </tr>
         </c:forEach>
     </table>
+</div>
+
+<div class="account_operations">
+    <div>
+        <p><b>Request For Opening An Account</b></p>
+        <form action="/controller?command=new_account_request" method="post">
+            <fieldset>
+                <label>
+                    Rate
+                </label>
+                <select name="rate" id="rate_id2">
+                    <option value="5">5%</option>
+                    <option value="10">10%</option>
+                    <option value="15">15%</option>
+                    <option value="20">20%</option>
+                    <option value="25">25%</option>
+                    <option value="30">30%</option>
+                </select>
+            </fieldset>
+            <fieldset class="signin_action">
+                <input class="btn_fill" type="submit" name="submit" value="New Deposit Account Request">
+            </fieldset>
+        </form>
+
+    </div>
+
+    <div class="message">
+        <h5>Messages:</h5>
+        ${message}
+    </div>
+
 </div>
 
 </body>

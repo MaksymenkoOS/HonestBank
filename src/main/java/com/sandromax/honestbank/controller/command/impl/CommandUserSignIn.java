@@ -22,7 +22,7 @@ public class CommandUserSignIn implements Command {
 
         HttpSession session = request.getSession();
 
-        UserDao userDao = new UserDao(new FileLogger());
+        UserDao userDao = new UserDao();
         User user = userDao.findByEmail(emailParam);
 
         if(user == null) {
@@ -32,7 +32,7 @@ public class CommandUserSignIn implements Command {
         }
         else {
             String passDb = user.getPass();
-            if(passDb.length() != 0 && (BCrypt.checkpw(passParam, passDb))) {
+            if(BCrypt.checkpw(passParam, passDb)) {
 //            session.setAttribute("user_name", user.getName());
                 user.clearPass();
                 session.setAttribute("user", user);

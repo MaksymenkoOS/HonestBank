@@ -186,7 +186,7 @@ public class Operator {
 
         } catch (SQLException e) {
             logger.error(e.getMessage());
-
+            // TODO: 21.05.18 Need rollback() here.
         }
 
         return result;

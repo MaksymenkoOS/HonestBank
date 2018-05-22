@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%--
   Created by IntelliJ IDEA.
   User: sandro
@@ -12,6 +14,10 @@
     <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
+<%--<c:set var="lang" value="${cookie.lang.value}" scope="session"/>--%>
+<c:set var="lang" value="${sessionScope.lang.value}" scope="session"/>
+<fmt:setLocale value="${empty sessionScope.lang ? 'en' : sessionScope.lang}"/>
+<fmt:setBundle basename="/localization/front" var="bundle" scope="session"/>
 
 <header>
     <div>
@@ -23,6 +29,8 @@
     <div>
         <div>User: ${user.getName()}</div>
         <a href="/controller?command=sign_out">Sign Out</a>
+        <a href="/?command=change_lang&lang=en"> English </a>
+        <a href="/?command=change_lang&lang=ru"> Русский </a>
     </div>
 </header>
 <div class="footer">

@@ -25,7 +25,7 @@ public class CommandUserSignUp implements Command {
         String passParam = request.getParameter("pass");
         String passHash = BCrypt.hashpw(passParam, BCrypt.gensalt(13));
 
-        UserDao userDao = new UserDao(new FileLogger());
+        UserDao userDao = new UserDao();
         User user = new User(nameParam, emailParam, passHash);
 
         if(userDao.findByEmail(emailParam) == null) {

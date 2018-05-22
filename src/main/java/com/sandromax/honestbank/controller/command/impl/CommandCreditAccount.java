@@ -48,7 +48,7 @@ public class CommandCreditAccount implements Command {
             return;
         }
 
-        accountDao = new AccountDao(logger);
+        accountDao = new AccountDao();
 
     }
 
@@ -58,7 +58,7 @@ public class CommandCreditAccount implements Command {
 
     private void setParams(HttpServletRequest request) {
         session.setAttribute("account_type", "credit");
-        request.setAttribute("accounts", accounts);
+        session.setAttribute("credit_accounts", accounts);
 
     }
 }

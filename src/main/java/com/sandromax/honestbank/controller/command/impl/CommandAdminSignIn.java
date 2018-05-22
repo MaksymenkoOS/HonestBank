@@ -7,12 +7,12 @@ import com.sandromax.honestbank.domain.account.NewAccountRequest;
 import com.sandromax.honestbank.domain.account.Transaction;
 import com.sandromax.honestbank.domain.service.BCrypt;
 import com.sandromax.honestbank.domain.service.log.FileLogger;
-import com.sandromax.honestbank.domain.service.log.Logger;
 import com.sandromax.honestbank.domain.user.Admin;
 import com.sandromax.honestbank.model.dao.impl.AccountDao;
 import com.sandromax.honestbank.model.dao.impl.AdminDao;
 import com.sandromax.honestbank.model.dao.impl.NewAccountRequestDao;
 import com.sandromax.honestbank.model.dao.impl.TransactionDao;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -20,11 +20,14 @@ import java.util.LinkedList;
 
 public class CommandAdminSignIn implements Command {
 
-    private Logger logger = new FileLogger();
+    Logger logger = Logger.getLogger(CommandAdminSignIn.class.getName());
+    HttpSession session;
 
     @Override
     public String execute(HttpServletRequest request) {
         String page;
+
+        sessionLogOut(request);
 
         if(authorizeAdmin(request)) {
             page = Pages.ADMIN_CABINET;
@@ -32,8 +35,8 @@ public class CommandAdminSignIn implements Command {
         }
         else {
             page = Pages.ADMIN_SIGN_IN;
-            logger.log("Error! Wrong email or password.");
-            request.setAttribute("message", "Error! Wrong email or password.");
+            logger.info("Wrong email or password.");
+            request.setAttribute("message", "Wrong email or password.");
         }
 
         return page;
@@ -45,9 +48,9 @@ public class CommandAdminSignIn implements Command {
         String emailParam = request.getParameter("email");
         String passParam = request.getParameter("password");
 
-        HttpSession session = request.getSession();
+        session = request.getSession();
 
-        AdminDao adminDao = new AdminDao(new FileLogger());
+        AdminDao adminDao = new AdminDao();
         Admin admin = adminDao.findByEmail(emailParam);
 
         if(admin == null) {
@@ -55,21 +58,18 @@ public class CommandAdminSignIn implements Command {
         }
         else {
             String passDb = admin.getPass();
-            if(passDb.length() != 0 && (BCrypt.checkpw(passParam, passDb))) {
-//            session.setAttribute("user_name", user.getName());
+            if(BCrypt.checkpw(passParam, passDb)) {
                 admin.clearPass();
                 session.setAttribute("admin", admin);
-
                 return true;
             } else {
-                request.setAttribute("error_message", "wrong email or password");
                 return false;
             }
         }
     }
 
     private LinkedList<NewAccountRequest> getAllNotConfirmedRequests() {
-        NewAccountRequestDao dao = new NewAccountRequestDao(logger);
+        NewAccountRequestDao dao = new NewAccountRequestDao();
         LinkedList<NewAccountRequest> requests = dao.findAllNotConfirmed();
 //        if(requests)
         return requests;
@@ -90,12 +90,12 @@ public class CommandAdminSignIn implements Command {
 //    }
 
     private LinkedList<Account> getAllActiveAccounts() {
-        AccountDao accountDao = new AccountDao(logger);
+        AccountDao accountDao = new AccountDao();
         return accountDao.findAll();
     }
 
     private LinkedList<Transaction> getAllTransactions() {
-        TransactionDao transactionDao = new TransactionDao(logger);
+        TransactionDao transactionDao = new TransactionDao();
         return transactionDao.findAll();
     }
 

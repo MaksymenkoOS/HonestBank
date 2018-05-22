@@ -28,61 +28,6 @@
     </div>
 </header>
 
-<h3>Operations</h3>
-<div class="account_operations">
-    <%--<div>--%>
-        <%--<form action="/controller?command=transfer" method="post">--%>
-            <%--<p><b>Transfer to account: </b></p>--%>
-            <%--<input type="text" name="recipient" placeholder="recipient account">--%>
-            <%--<input type="submit" value="PAY">--%>
-        <%--</form>--%>
-    <%--</div>--%>
-
-    <div>
-        <p><b>Request For Opening An Account</b></p>
-        <form action="/controller?command=new_account_request" method="post">
-            <fieldset>
-                <label>
-                    Rate
-                    <%--<input type="email" name="email" placeholder="your@mail.com" required>--%>
-                </label>
-                <select name="rate" id="rate_id2">
-                    <option value="5">5%</option>
-                    <option value="10">10%</option>
-                    <option value="15">15%</option>
-                    <option value="20">20%</option>
-                    <option value="25">25%</option>
-                    <option value="30">30%</option>
-                </select>
-                <label>
-                    Credit Limit
-                    <%--<input type="password" name="password" placeholder="5+ символов" required>--%>
-                    <%--${message}--%>
-                </label>
-                <select name="limit" id="limit_id2">
-                    <option value="1000">1000</option>
-                    <option value="5000">5000</option>
-                    <option value="10000">10000</option>
-                    <option value="50000">50000</option>
-                    <option value="100000">100000</option>
-                </select>
-            </fieldset>
-            <fieldset class="signin_action">
-                <input class="btn_fill" type="submit" name="submit" value="New Account Request">
-                <%--<label class="container">Запомнить--%>
-                    <%--<input type="checkbox" checked="checked">--%>
-                    <%--<span class="checkmark"></span>--%>
-                <%--</label>--%>
-            </fieldset>
-        </form>
-    </div>
-
-    <div class="message">
-        <h5>Messages: </h5>
-        ${message}
-    </div>
-</div>
-
 <div class="account_info">
     <h3>Account Info</h3>
     <table>
@@ -95,8 +40,9 @@
             <th>RATE</th>
             <th>OPENING DATE</th>
             <th>CLOSING DATE</th>
+            <th>MONEY TRANSFER</th>
         </tr>
-        <c:forEach items="${accounts}" var="item">
+        <c:forEach items="${credit_accounts}" var="item">
             <tr>
                 <td>${item.getIdInDb()}</td>
                 <td>${item.getType()}</td>
@@ -108,7 +54,6 @@
                 <td>${item.getValidityTo()}</td>
                 <td>
                     <form action="/controller?command=transfer&account_id=${item.getIdInDb()}" method="post">
-                        <p><b>Transfer to account: </b></p>
                         <input type="text" name="recipient" placeholder="recipient account">
                         <input type="text" name="sum" placeholder="sum">
                         <input type="submit" value="PAY">
@@ -117,6 +62,45 @@
             </tr>
         </c:forEach>
     </table>
+</div>
+
+<div class="account_operations">
+    <div>
+        <p><b>Request For Opening An Account</b></p>
+        <form action="/controller?command=new_account_request" method="post">
+            <fieldset>
+                <label>
+                    Rate
+                </label>
+                <select name="rate" id="rate_id2">
+                    <option value="5">5%</option>
+                    <option value="10">10%</option>
+                    <option value="15">15%</option>
+                    <option value="20">20%</option>
+                    <option value="25">25%</option>
+                    <option value="30">30%</option>
+                </select>
+                <label>
+                    Credit Limit
+                </label>
+                <select name="limit" id="limit_id2">
+                    <option value="1000">1000</option>
+                    <option value="5000">5000</option>
+                    <option value="10000">10000</option>
+                    <option value="50000">50000</option>
+                    <option value="100000">100000</option>
+                </select>
+            </fieldset>
+            <fieldset class="signin_action">
+                <input class="btn_fill" type="submit" name="submit" value="New Account Request">
+            </fieldset>
+        </form>
+    </div>
+
+    <div class="message">
+        <h5>Messages: </h5>
+        ${message}
+    </div>
 </div>
 
 </body>

@@ -1,4 +1,5 @@
 <%--
+
   Created by IntelliJ IDEA.
   User: sandro
   Date: 26.04.18
@@ -6,38 +7,50 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <title>Welcome to HonestBank</title>
 </head>
 <body>
-<h1>Hello, I'm a BANK! HONEST BANK!</h1>
 
-<a href="/controller?command=user_sign_up_page">Registration</a>
+<%--<c:set var="lang" value="${cookie.lang.value}" scope="session"/>--%>
+<%--<c:set var="lang" value="${sessionScope.lang}" scope="session"/>--%>
+<%--<fmt:setLocale value="${empty sessionScope.lang ? 'en' : sessionScope.lang}"/>--%>
+<%--<fmt:setBundle basename="/localization/front" var="bundle" scope="session"/>--%>
+<%----%>
+<c:set var="lang" value="${empty lang ? 'en' : sessionScope.lang}" scope="session"/>
+<fmt:setLocale value="${lang}" scope="session"/>
+<fmt:setBundle basename="localization/front" scope="session"/>
+
+<h1><fmt:message key="greeting"/></h1>
+
+<a href="/controller?command=user_sign_up_page"><fmt:message key="registration"/> </a>
 <br>
 <br>
 <form action="/controller?command=user_sign_in" method="post">
     <fieldset class="signin_info">
         <label>
-            Ваш Email Адрес
-            <input type="email" name="email" placeholder="your@mail.com" required>
+            <fmt:message key="email"/>
+            <input type="email" name="email" placeholder=<fmt:message key="emailPlaceholder"/> required>
         </label>
         <label>
-            Ваш пароль
-            <input type="password" name="password" placeholder="5+ символов" required>
+            <fmt:message key="password"/>
+            <input type="password" name="password" placeholder=<fmt:message key="passwordPlaceholder"/> required>
             ${message}
         </label>
     </fieldset>
     <fieldset class="signin_action">
-        <input class="btn_fill" type="submit" name="submit" value="Войти">
-        <label class="container">Запомнить
-            <input type="checkbox" checked="checked">
-            <span class="checkmark"></span>
-        </label>
+        <input class="btn_fill" type="submit" name="submit" value=<fmt:message key="enter"/>>
+
     </fieldset>
 </form>
 
-<a href="/controller?command=ADMIN_SIGN_IN_PAGE">Enter for Admins</a>
+<a href="/controller?command=ADMIN_SIGN_IN_PAGE"><fmt:message key="adminEnter"/></a>
+
+<a href="/controller?command=CHANGE_LANG&lang=en"> English </a>
+<a href="/controller?command=CHANGE_LANG&lang=ru"> Русский </a>
 
 </body>
 </html>

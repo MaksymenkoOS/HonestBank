@@ -23,7 +23,8 @@ public enum CommandList {
     SIGN_OUT(new CommandSignOut()),
     NEW_ACCOUNT_REQUEST(new CommandNewAccountRequest()),
     ACCEPT_REQUEST(new CommandAcceptRequest()),
-    DECLINE_REQUEST(new CommandDeclineRequest());
+    DECLINE_REQUEST(new CommandDeclineRequest()),
+    CHANGE_LANG(new CommandChangeLang());
 
     private CommandList(Command command) {
         this.command = command;

@@ -11,13 +11,14 @@
 <head>
     <title>Admin Cabinet</title>
     <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/cabinet.css">
     <link rel="stylesheet" href="../css/admin_cabinet.css">
 </head>
 <body>
 
 <header>
     <div>
-        <img src="../img/Honest_logo-400x284.png" alt="logo">
+        <img src="../img/HB.svg" alt="logo">
     </div>
     <div>
         <h1>Admin Cabinet</h1>
@@ -49,26 +50,30 @@
                 <td>${item.getRate()}%</td>
                 <td>${item.getLimit()}</td>
                     <%--<form action="/controller?command=confirm_request&request_id=${item.getIdInDb()}">--%>
-                        <%--<select name="rate" id="rate_id">--%>
-                            <%--<option value="5">5</option>--%>
-                            <%--<option value="10">10</option>--%>
-                            <%--<option value="15">15</option>--%>
-                            <%--<option value="20">20</option>--%>
-                            <%--<option value="25">25</option>--%>
-                            <%--<option value="30">30</option>--%>
-                        <%--</select>--%>
-                        <%--<select name="limit" id="limit_id">--%>
-                            <%--<option value="0">0</option>--%>
-                            <%--<option value="1000">1000</option>--%>
-                            <%--<option value="5000">5000</option>--%>
-                            <%--<option value="10000">10000</option>--%>
-                            <%--<option value="50000">50000</option>--%>
-                            <%--<option value="100000">100000</option>--%>
-                        <%--</select>--%>
-                        <%--<input type="submit" value="Confirm">--%>
+                    <%--<select name="rate" id="rate_id">--%>
+                    <%--<option value="5">5</option>--%>
+                    <%--<option value="10">10</option>--%>
+                    <%--<option value="15">15</option>--%>
+                    <%--<option value="20">20</option>--%>
+                    <%--<option value="25">25</option>--%>
+                    <%--<option value="30">30</option>--%>
+                    <%--</select>--%>
+                    <%--<select name="limit" id="limit_id">--%>
+                    <%--<option value="0">0</option>--%>
+                    <%--<option value="1000">1000</option>--%>
+                    <%--<option value="5000">5000</option>--%>
+                    <%--<option value="10000">10000</option>--%>
+                    <%--<option value="50000">50000</option>--%>
+                    <%--<option value="100000">100000</option>--%>
+                    <%--</select>--%>
+                    <%--<input type="submit" value="Confirm">--%>
                     <%--</form>--%>
-                <td><a href="/controller?command=accept_request&request_id=${item.getIdInDb()}"><button>Accept</button></a></td>
-                <td><a href="/controller?command=decline_request&request_id=${item.getIdInDb()}"><button>Decline</button></a></td>
+                <td><a href="/controller?command=accept_request&request_id=${item.getIdInDb()}">
+                    <button>Accept</button>
+                </a></td>
+                <td><a href="/controller?command=decline_request&request_id=${item.getIdInDb()}">
+                    <button>Decline</button>
+                </a></td>
             </tr>
         </c:forEach>
     </table>
@@ -105,29 +110,26 @@
 
 <div class="transactions">
     <h4>All Transactions</h4>
-    <table>
-        <tr>
-            idInDb;
-            private LocalDateTime time_stamp;
-            private double amount;
-            private Account sender;
-            private Account recipient;
-            <th>ID</th>
-            <th>TIME STAMP</th>
-            <th>AMOUNT</th>
-            <th>SENDER ACCOUNT</th>
-            <th>RECIPIENT ACCOUNT</th>
-        </tr>
-        <c:forEach items="${all_transactions}" var="item">
+    <div class="block">
+        <table>
             <tr>
-                <td>${item.getIdInDb()}</td>
-                <td>${item.getTime_stamp()}</td>
-                <td>${item.getAmount()}</td>
-                <td>${item.getSender().getIdInDb()}</td>
-                <td>${item.getRecipient().getIdInDb()}</td>
+                <th>ID</th>
+                <th>TIME STAMP</th>
+                <th>AMOUNT</th>
+                <th>SENDER ACCOUNT</th>
+                <th>RECIPIENT ACCOUNT</th>
             </tr>
-        </c:forEach>
-    </table>
+            <c:forEach items="${all_transactions}" var="item">
+                <tr>
+                    <td>${item.getIdInDb()}</td>
+                    <td>${item.getTime_stamp()}</td>
+                    <td>${item.getAmount()}</td>
+                    <td>${item.getSender().getIdInDb()}</td>
+                    <td>${item.getRecipient().getIdInDb()}</td>
+                </tr>
+            </c:forEach>
+        </table>
+    </div>
 </div>
 
 <div class="message">

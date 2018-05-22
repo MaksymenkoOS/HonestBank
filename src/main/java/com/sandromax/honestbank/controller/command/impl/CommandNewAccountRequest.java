@@ -40,7 +40,7 @@ public class CommandNewAccountRequest implements Command {
         if(checkParamsAndReport(request)) {
 
             if(checkAndReport(type, user, request)) {
-                NewAccountRequestDao dao = new NewAccountRequestDao(logger);
+                NewAccountRequestDao dao = new NewAccountRequestDao();
                 dao.create(new NewAccountRequest(type, user, rate, creditLimit));
 
                 setAttributes(request);
@@ -100,7 +100,7 @@ public class CommandNewAccountRequest implements Command {
             return true;
         }
 
-        NewAccountRequestDao dao = new NewAccountRequestDao(logger);
+        NewAccountRequestDao dao = new NewAccountRequestDao();
 
         if(dao.isContainNotConfirmedByUserAndType(type, user)) {
             logger.log("Sorry? Can't create new account request. Request already in the list.");
@@ -117,7 +117,7 @@ public class CommandNewAccountRequest implements Command {
             return true;
         }
 
-        accountDao = new AccountDao(this.logger);
+        accountDao = new AccountDao();
 
         LinkedList<Account> allUserAccounts = accountDao.findByUserAndAccountType(user, type);
 
