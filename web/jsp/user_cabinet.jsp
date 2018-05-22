@@ -15,24 +15,24 @@
 </head>
 <body>
 <%--<c:set var="lang" value="${cookie.lang.value}" scope="session"/>--%>
-<c:set var="lang" value="${sessionScope.lang.value}" scope="session"/>
-<fmt:setLocale value="${empty sessionScope.lang ? 'en' : sessionScope.lang}"/>
-<fmt:setBundle basename="/localization/front" var="bundle" scope="session"/>
-
-<header>
-    <div>
-        <img src="../img/honest_512.png" alt="logo">
-    </div>
-    <div>
-        <h1>Cabinet</h1>
-    </div>
-    <div>
-        <div>User: ${user.getName()}</div>
-        <a href="/controller?command=sign_out">Sign Out</a>
-        <a href="/?command=change_lang&lang=en"> English </a>
-        <a href="/?command=change_lang&lang=ru"> Русский </a>
-    </div>
-</header>
+<c:set var="lang" value="${empty lang ? 'en' : sessionScope.lang}" scope="session"/>
+<fmt:setLocale value="${lang}" scope="session"/>
+<fmt:setBundle basename="localization/front" scope="session"/>
+<jsp:include page="header.jsp"/>
+<%--<header>--%>
+    <%--<div>--%>
+        <%--<img src="../img/honest_512.png" alt="logo">--%>
+    <%--</div>--%>
+    <%--<div>--%>
+        <%--<h1>Cabinet</h1>--%>
+    <%--</div>--%>
+    <%--<div>--%>
+        <%--<div>User: ${user.getName()}</div>--%>
+        <%--<a href="/controller?command=sign_out">Sign Out</a>--%>
+        <%--<a href="/?command=change_lang&lang=en"> English </a>--%>
+        <%--<a href="/?command=change_lang&lang=ru"> Русский </a>--%>
+    <%--</div>--%>
+<%--</header>--%>
 <div class="footer">
     <div class="accounts">
         <h3>ACCOUNTS</h3>

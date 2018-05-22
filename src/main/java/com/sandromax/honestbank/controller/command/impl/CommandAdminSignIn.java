@@ -83,8 +83,8 @@ public class CommandAdminSignIn implements Command {
     }
 
 //    private LinkedList<NewAccountRequest> createNewRequestList() {
-//        NewAccountRequestDao dao = new NewAccountRequestDao(new FileLogger());
-//        LinkedList<NewAccountRequest> requests = dao.findAllNotConfirmed();
+//        NewAccountRequestDao com.sandromax.honestbank.dao = new NewAccountRequestDao(new FileLogger());
+//        LinkedList<NewAccountRequest> requests = com.sandromax.honestbank.dao.findAllNotConfirmed();
 //
 //        return requests;
 //    }

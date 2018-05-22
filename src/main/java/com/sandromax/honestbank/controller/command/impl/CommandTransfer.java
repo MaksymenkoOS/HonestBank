@@ -8,22 +8,22 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 
 public class CommandTransfer implements Command {
-
-    int accountIdFrom;
-    int accountIdTo;
-    double sum;
     private static Logger logger = Logger.getLogger(CommandTransfer.class.getName());
+
+    private int accountIdFrom;
+    private int accountIdTo;
+    private double sum;
 
     @Override
     public String execute(HttpServletRequest request) {
-        String page = Pages.CHECK;
+        String page = Pages.CREDIT_ACCOUNT;
 
         if(collectParams(request)) {
             if(operation()) {
                 setParams(request);
-                page = Pages.CHECK;
+//                page = Pages.CHECK;
             } else {
-                page = Pages.USER_CABINET;
+//                page = Pages.USER_CABINET;
                 request.setAttribute("message", "Error! Transfer was not successful.");
             }
         }

@@ -118,7 +118,7 @@ public class CommandAcceptRequest implements Command {
     }
 
     private LinkedList<NewAccountRequest> createNewRequestList() {
-//        NewAccountRequestDao dao = new NewAccountRequestDao(new FileLogger());
+//        NewAccountRequestDao com.sandromax.honestbank.dao = new NewAccountRequestDao(new FileLogger());
         return newAccountRequestDao.findAllNotConfirmed();
     }
 

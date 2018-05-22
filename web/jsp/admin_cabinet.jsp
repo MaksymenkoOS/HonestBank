@@ -30,8 +30,8 @@
 </header>
 
 
-<h3>Accounts Opening Requests</h3>
 <div class="requests">
+    <h3>Accounts Opening Requests</h3>
     <table>
         <tr>
             <th>ID</th>

@@ -2,33 +2,67 @@ package com.sandromax.honestbank.controller.command.impl;
 
 import com.sandromax.honestbank.controller.command.Command;
 import com.sandromax.honestbank.controller.until.constants.Pages;
+import com.sandromax.honestbank.domain.account.Account;
+import com.sandromax.honestbank.domain.account.AccountType;
 import com.sandromax.honestbank.domain.bank.Operator;
+import com.sandromax.honestbank.domain.user.User;
+import com.sandromax.honestbank.model.dao.impl.AccountDao;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
+import java.util.LinkedList;
 
 public class CommandReplenishment implements Command {
+    private static Logger logger = Logger.getLogger(CommandReplenishment.class.getName());
+
     int accountId;
     double sum;
-    private static Logger logger = Logger.getLogger(CommandReplenishment.class.getName());
+    HttpSession session;
+    User user;
+    private AccountType accountType;
+    AccountDao accountDao;
+    LinkedList<Account> accounts;
 
     @Override
     public String execute(HttpServletRequest request) {
-        String page = Pages.CHECK;
+        String page = Pages.DEPOSIT_ACCOUNT;
 
-        if(collectParams(request)) {
+        if(collectParams(request) & init(request)) {
             if(operation()) {
+                getAccountInfo();
                 setParams(request);
-                page = Pages.CHECK;
             } else {
-                page = Pages.USER_CABINET;
                 request.setAttribute("message", "Error! Replenish was not successful.");
             }
         }
-//        System.out.println("page: " + page);
 
         return page;
+    }
+
+    private boolean init(HttpServletRequest request) {
+        try {
+
+
+            session = request.getSession();
+            user = (User) session.getAttribute("user");
+            accountType = AccountType.DEPOSIT;
+            accountDao = new AccountDao();
+            accounts = new LinkedList<>();
+
+
+            if (user == null) {
+                logger.error("Error! Empty param 'user'");
+                request.setAttribute("message", "Error! Empty param 'user'. Please reenter.");
+                return false;
+            }
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 
     private boolean collectParams(HttpServletRequest request) {
@@ -69,7 +103,13 @@ public class CommandReplenishment implements Command {
         return result;
     }
 
+    private void getAccountInfo() {
+        accounts = accountDao.findByUserAndAccountType(user, accountType);
+    }
+
+
     private void setParams(HttpServletRequest request) {
         request.setAttribute("message", "Account " + accountId + " was successfully replenished to the amount of " + sum + ".");
+        session.setAttribute("deposit_accounts", accounts);
     }
 }

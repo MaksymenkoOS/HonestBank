@@ -53,7 +53,7 @@ public class CommandCreditAccount implements Command {
     }
 
     private void getAccountInfo() {
-        accounts = accountDao.findByUserAndAccountType(user, accountType);
+        accounts = accountDao.findByUserAndAccountType(user, AccountType.CREDIT);
     }
 
     private void setParams(HttpServletRequest request) {
