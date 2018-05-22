@@ -1,20 +1,16 @@
 package com.sandromax.honestbank.model.dao.impl;
 
 import com.sandromax.honestbank.domain.account.CreditFeatures;
-import com.sandromax.honestbank.domain.service.log.Logger;
 import com.sandromax.honestbank.model.dao.GenericDao;
 import com.sandromax.honestbank.model.dao.connection.ConnectionPool;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.LinkedList;
 
 public class CreditFeaturesDao implements GenericDao<CreditFeatures> {
 
-    public CreditFeaturesDao(Logger logger) {
-        this.logger = logger;
-    }
-
-    private Logger logger;
+    private static final Logger logger = Logger.getLogger(CreditFeaturesDao.class.getName());
 
     private static final String SQL_CREATE_CREDIT_FEATURES = "INSERT INTO credit_features (account_id, credit_limit, indebtedness) VALUES(?, ?, ?);";
     private static final String SQL_FIND_ALL_CREDIT_FEATURES = "SELECT * FROM credit_features;";
@@ -102,16 +98,6 @@ public class CreditFeaturesDao implements GenericDao<CreditFeatures> {
 
         return features;
     }
-
-//    @Override
-//    public CreditFeatures findByName(String name) {
-//        return null;
-//    }
-//
-//    @Override
-//    public CreditFeatures findBy(String columnName, String value) {
-//        return null;
-//    }
 
     @Override
     public boolean update(CreditFeatures entity) {

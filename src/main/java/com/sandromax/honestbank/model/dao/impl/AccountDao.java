@@ -2,23 +2,18 @@ package com.sandromax.honestbank.model.dao.impl;
 
 import com.sandromax.honestbank.domain.account.Account;
 import com.sandromax.honestbank.domain.account.AccountType;
-import com.sandromax.honestbank.domain.service.log.Logger;
 import com.sandromax.honestbank.domain.user.User;
 import com.sandromax.honestbank.model.dao.GenericDao;
 import com.sandromax.honestbank.model.dao.connection.ConnectionPool;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.LinkedList;
-import java.util.List;
 
 public class AccountDao implements GenericDao<Account> {
 
-    public AccountDao(Logger logger) {
-        this.logger = logger;
-    }
-
-    private Logger logger;
+    private static final Logger logger = Logger.getLogger(AccountDao.class.getName());
 
     private static final String SQL_CREATE_ACCOUNT = "INSERT INTO account (type_id, user_id, balance, rate, validity_from, validity_to) VALUES(?, ?, ?, ?, ?, ?);";
     private static final String SQL_FIND_ALL_ACCOUNTS = "SELECT * FROM account;";
@@ -36,7 +31,7 @@ public class AccountDao implements GenericDao<Account> {
         try(Connection connection = ConnectionPool.getConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_CREATE_ACCOUNT, Statement.RETURN_GENERATED_KEYS)) {
 
-            AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
+            AccountTypeDao accountTypeDao = new AccountTypeDao();
             int typeId = accountTypeDao.findId(entity.getType());
             statement.setInt(1, typeId);
 
@@ -62,7 +57,7 @@ public class AccountDao implements GenericDao<Account> {
                 newGeneratedId = rs.getInt(1);
 
         } catch (SQLException e) {
-            logger.log(e.getMessage());
+            logger.trace(e.getMessage());
         }
 
         return newGeneratedId;
@@ -81,11 +76,11 @@ public class AccountDao implements GenericDao<Account> {
                 int idInDb = resultSet.getInt("id");
 
                 int typeId = resultSet.getInt("type_id");
-                AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
+                AccountTypeDao accountTypeDao = new AccountTypeDao();
                 AccountType type = accountTypeDao.findById(typeId);
 
                 int userId = resultSet.getInt("user_id");
-                UserDao userDao = new UserDao(logger);
+                UserDao userDao = new UserDao();
                 User user = userDao.findById(userId);
 
                 double balance = resultSet.getDouble("balance");
@@ -131,11 +126,11 @@ public class AccountDao implements GenericDao<Account> {
 //                int idInDb = resultSet.getInt(1);
 
                 int typeId = resultSet.getInt("type_id");
-                AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
+                AccountTypeDao accountTypeDao = new AccountTypeDao();
                 AccountType type = accountTypeDao.findById(typeId);
 
                 int userId = resultSet.getInt("user_id");
-                UserDao userDao = new UserDao(logger);
+                UserDao userDao = new UserDao();
                 User user = userDao.findById(userId);
 
                 double balance = resultSet.getDouble("balance");
@@ -170,7 +165,7 @@ public class AccountDao implements GenericDao<Account> {
         try(Connection connection = ConnectionPool.getConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_ACCOUNT)) {
 
-            AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
+            AccountTypeDao accountTypeDao = new AccountTypeDao();
             int typeId = accountTypeDao.findId(entity.getType());
             statement.setInt(1, typeId);
 
@@ -218,7 +213,7 @@ public class AccountDao implements GenericDao<Account> {
         try(Connection connection = ConnectionPool.getConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_ACCOUNTS_BY_USER_ID)) {
 
-            UserDao userDao = new UserDao(logger);
+            UserDao userDao = new UserDao();
             User user = userDao.findByEmail(email);
 
             statement.setInt(1, user.getIdInDb());
@@ -228,7 +223,7 @@ public class AccountDao implements GenericDao<Account> {
                 int idInDb = resultSet.getInt("id");
 
                 int typeId = resultSet.getInt("type_id");
-                AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
+                AccountTypeDao accountTypeDao = new AccountTypeDao();
                 AccountType type = accountTypeDao.findById(typeId);
 
                 double balance = resultSet.getDouble("balance");
@@ -266,13 +261,13 @@ public class AccountDao implements GenericDao<Account> {
 
             int userId = user.getIdInDb();
             if(userId == 0) {
-                UserDao userDao = new UserDao(logger);
+                UserDao userDao = new UserDao();
                 user = userDao.findByEmail(user.getEmail());
                 userId = user.getIdInDb();
             }
             statement.setInt(1, user.getIdInDb());
 
-            AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
+            AccountTypeDao accountTypeDao = new AccountTypeDao();
             int typeId = accountTypeDao.findId(type);
             statement.setInt(2, typeId);
 

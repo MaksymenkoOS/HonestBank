@@ -1,22 +1,16 @@
 package com.sandromax.honestbank.model.dao.impl;
 
-import com.sandromax.honestbank.domain.service.BCrypt;
-import com.sandromax.honestbank.domain.service.log.Logger;
 import com.sandromax.honestbank.domain.user.Admin;
 import com.sandromax.honestbank.model.dao.GenericDao;
 import com.sandromax.honestbank.model.dao.connection.ConnectionPool;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.LinkedList;
-import java.util.List;
 
 public class AdminDao implements GenericDao<Admin> {
 
-    public AdminDao(Logger logger) {
-        this.logger = logger;
-    }
-
-    private Logger logger;
+    private static final Logger logger = Logger.getLogger(AdminDao.class.getName());
 
     private static final String SQL_CREATE_ADMIN = "INSERT INTO admin (email, pass) VALUES(?, ?);";
     private static final String SQL_FIND_ALL_ADMINS = "SELECT * FROM admin;";
@@ -29,25 +23,31 @@ public class AdminDao implements GenericDao<Admin> {
     @Override
     public int create(Admin entity) {
         int newGeneratedId = 0;
-        String passHash = BCrypt.hashpw(entity.getPass(), BCrypt.gensalt(13));
+        ResultSet rs = null;
 
         try(Connection connection = ConnectionPool.getConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_CREATE_ADMIN, Statement.RETURN_GENERATED_KEYS)) {
 
             statement.setString(1, entity.getEmail());
-            statement.setString(2, passHash);
+            statement.setString(2, entity.getPass());
 
             statement.executeUpdate();
 
-            //  return new new generated id
-            ResultSet rs = statement.getGeneratedKeys();
+            rs = statement.getGeneratedKeys();
             while (rs.next())
                 newGeneratedId = rs.getInt(1);
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
+        logger.trace("admin was registered with id:" + newGeneratedId);
         return newGeneratedId;
     }
 
@@ -78,7 +78,7 @@ public class AdminDao implements GenericDao<Admin> {
                 e.printStackTrace();
             }
         }
-
+        logger.trace("Number of all admins: " + admins.size());
         return admins;
     }
 
@@ -110,7 +110,7 @@ public class AdminDao implements GenericDao<Admin> {
                 e.printStackTrace();
             }
         }
-
+        logger.trace("find " + admin.getEmail() + " by " + "id: " + admin.getIdInDb());
         return admin;
     }
 
@@ -127,16 +127,11 @@ public class AdminDao implements GenericDao<Admin> {
     @Override
     public boolean update(Admin entity) {
         boolean result = false;
-        String passHash;
-        if(entity.getPass().length() < 59)
-            passHash = BCrypt.hashpw(entity.getPass(), BCrypt.gensalt(13));
-        else
-            passHash = entity.getPass();
 
         try(Connection connection = ConnectionPool.getConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_ADMIN)) {
 
-            statement.setString(1, passHash);
+            statement.setString(1, entity.getPass());
             statement.setString(2, entity.getEmail());
 
             result = statement.execute();
@@ -144,6 +139,7 @@ public class AdminDao implements GenericDao<Admin> {
             e.printStackTrace();
         }
 
+        logger.trace("Password was changed.");
         return result;
     }
 
@@ -161,6 +157,7 @@ public class AdminDao implements GenericDao<Admin> {
             e.printStackTrace();
         }
 
+        logger.trace("admin: " + entity.getEmail() + " was deleted");
         return result;
     }
 
@@ -192,6 +189,7 @@ public class AdminDao implements GenericDao<Admin> {
             }
         }
 
+        logger.trace("Found " + admin.getEmail() + " by email: " + email);
         return admin;
     }
 }

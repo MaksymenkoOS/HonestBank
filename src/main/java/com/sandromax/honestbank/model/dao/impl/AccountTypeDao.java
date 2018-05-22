@@ -1,9 +1,9 @@
 package com.sandromax.honestbank.model.dao.impl;
 
 import com.sandromax.honestbank.domain.account.AccountType;
-import com.sandromax.honestbank.domain.service.log.Logger;
 import com.sandromax.honestbank.model.dao.GenericDao;
 import com.sandromax.honestbank.model.dao.connection.ConnectionPool;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.LinkedList;
@@ -11,11 +11,7 @@ import java.util.List;
 
 public class AccountTypeDao implements GenericDao<AccountType> {
 
-    public AccountTypeDao(Logger logger) {
-        this.logger = logger;
-    }
-
-    private Logger logger;
+    private static final Logger logger = Logger.getLogger(AccountTypeDao.class.getName());
 
     private static final String SQL_CREATE_ACCOUNT_TYPE = "INSERT INTO account_type (name) VALUES(?);";
     private static final String SQL_FIND_ALL_ACCOUNT_TYPES = "SELECT * FROM account_type;";

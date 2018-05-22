@@ -1,10 +1,10 @@
 package com.sandromax.honestbank.model.dao.impl;
 
 import com.sandromax.honestbank.domain.service.BCrypt;
-import com.sandromax.honestbank.domain.service.log.Logger;
 import com.sandromax.honestbank.domain.user.User;
 import com.sandromax.honestbank.model.dao.GenericDao;
 import com.sandromax.honestbank.model.dao.connection.ConnectionPool;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.LinkedList;
@@ -12,11 +12,7 @@ import java.util.List;
 
 public class UserDao implements GenericDao<User> {
 
-    public UserDao(Logger logger) {
-        this.logger = logger;
-    }
-
-    private Logger logger;
+    private static final Logger logger = Logger.getLogger(UserDao.class.getName());
 
     private static final String SQL_CREATE_USER = "INSERT INTO user(name, email, pass) VALUES(?, ?, ?);";
     private static final String SQL_FIND_ALL_USERS = "SELECT * FROM user;";
@@ -43,18 +39,19 @@ public class UserDao implements GenericDao<User> {
             statement.setString(3, entity.getPass());
 
             statement.executeUpdate();
-            logger.log("user: " + entity.getName() + " was successfully registered");
 
             //  return new new generated id
             ResultSet rs = statement.getGeneratedKeys();
-            while (rs.next())
+            while (rs.next()) {
                 newGeneratedId = rs.getInt(1);
+                logger.trace("user: " + entity.getName() + " was successfully registered");
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-
+        logger.trace("Registered with id: " + newGeneratedId);
         return newGeneratedId;
     }
 
@@ -77,7 +74,7 @@ public class UserDao implements GenericDao<User> {
                 users.add(user);
             }
 
-            logger.log("found " + users.size() + " users.");
+            logger.trace("found " + users.size() + " users.");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -117,6 +114,7 @@ public class UserDao implements GenericDao<User> {
             }
         }
 
+        logger.trace("Found " + user.getEmail() + " by id: " + id);
         return user;
     }
 
@@ -150,57 +148,19 @@ public class UserDao implements GenericDao<User> {
             }
         }
 
+        logger.trace("Found " + user.getEmail() + " by name: " + name);
         return user;
     }
-
-//    @Override
-//    public User findBy(String columnName, String value) {
-//        User user = null;
-////        ResultSet resultSet = null;
-////
-////        try(Connection connection = ConnectionPool.getConnection();
-////            PreparedStatement statement = connection.prepareStatement(SQL_FIND_USER_BY)) {
-////
-////            statement.setString(1, columnName);
-////            statement.setString(1, value);
-////            resultSet = statement.executeQuery();
-////
-////            while (resultSet.next()) {
-////                int id = resultSet.getInt(1);
-////                String name = resultSet.getNString(2);
-////                String email = resultSet.getString(3);
-////                String passDb = resultSet.getString(4);
-////
-////                user = new User(id, name, email, passDb);
-////            }
-////
-////        } catch (SQLException e) {
-////            e.printStackTrace();
-////        } finally {
-////            try {
-////                resultSet.close();
-////            } catch (SQLException e) {
-////                e.printStackTrace();
-////            }
-////        }
-//
-//        return user;
-//    }
 
     @Override
     public boolean update(User entity) {
         boolean result = false;
-        String passHash;
-        if(entity.getPass().length() < 59)          //todo Add check by hash signature
-            passHash = BCrypt.hashpw(entity.getPass(), BCrypt.gensalt(13));
-        else
-            passHash = entity.getPass();
 
         try(Connection connection = ConnectionPool.getConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_USER)) {
 
             statement.setString(1, entity.getName());
-            statement.setString(2, passHash);
+            statement.setString(2, entity.getPass());
             statement.setString(3, entity.getEmail());
 
             result = statement.execute();
@@ -208,7 +168,9 @@ public class UserDao implements GenericDao<User> {
             e.printStackTrace();
         }
 
-        return result;    }
+        logger.trace("Found " + entity.getEmail() + " was updated");
+        return result;
+    }
 
     @Override
     public boolean delete(User entity) {
@@ -222,7 +184,7 @@ public class UserDao implements GenericDao<User> {
             result = statement.execute();
 
             if(result)
-                logger.log("account of user " + entity.getName() + " was deleted.");
+                logger.trace("user " + entity.getName() + " was deleted.");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -243,7 +205,6 @@ public class UserDao implements GenericDao<User> {
             while (resultSet.next()) {
                 int id = resultSet.getInt(1);
                 String name = resultSet.getNString(2);
-//                String emailDb = resultSet.getString(3);
                 String passDb = resultSet.getString(4);
 
                 user = new User(id, name, email, passDb);
@@ -259,39 +220,8 @@ public class UserDao implements GenericDao<User> {
             }
         }
 
+        logger.trace("Found " + user.getName() + " by email: " + email);
         return user;
     }
 
-//    public User findByEmailAndPass(String email, String pass) {
-//        User user = null;
-//        ResultSet resultSet = null;
-//
-//        try(Connection connection = ConnectionPool.getConnection();
-//            PreparedStatement statement = connection.prepareStatement(SQL_FIND_USER_BY_EMAIL_AND_PASS)) {
-//
-//            statement.setString(1, email);
-//            statement.setString(2, pass);
-//            resultSet = statement.executeQuery();
-//
-//            while (resultSet.next()) {
-//                int id = resultSet.getInt(1);
-//                String name = resultSet.getNString(2);
-////                String emailDb = resultSet.getString(3);
-//                String passDb = resultSet.getString(4);
-//
-//                user = new User(id, name, email, passDb);
-//            }
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                resultSet.close();
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        return user;
-//    }
 }

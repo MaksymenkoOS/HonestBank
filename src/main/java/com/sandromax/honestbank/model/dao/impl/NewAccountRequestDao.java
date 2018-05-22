@@ -2,10 +2,10 @@ package com.sandromax.honestbank.model.dao.impl;
 
 import com.sandromax.honestbank.domain.account.AccountType;
 import com.sandromax.honestbank.domain.account.NewAccountRequest;
-import com.sandromax.honestbank.domain.service.log.Logger;
 import com.sandromax.honestbank.domain.user.User;
 import com.sandromax.honestbank.model.dao.GenericDao;
 import com.sandromax.honestbank.model.dao.connection.ConnectionPool;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -13,11 +13,7 @@ import java.util.LinkedList;
 
 public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
 
-    public NewAccountRequestDao(Logger logger) {
-        this.logger = logger;
-    }
-
-    private Logger logger;
+    private static final Logger logger = Logger.getLogger(NewAccountRequestDao.class.getName());
 
     private static final String SQL_CREATE_NEW_ACCOUNT_REQUEST = "INSERT INTO new_account_request(type_id, user_id, date, is_accepted, is_declined, rate, credit_limit) VALUES(?, ?, ?, false, false, ?, ?);";
     private static final String SQL_FIND_ALL_ACCOUNT_REQUESTS = "SELECT * FROM new_account_request;";
@@ -35,13 +31,13 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
         try(Connection connection = ConnectionPool.getConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_CREATE_NEW_ACCOUNT_REQUEST, Statement.RETURN_GENERATED_KEYS)) {
 
-            AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
+            AccountTypeDao accountTypeDao = new AccountTypeDao();
             AccountType type = entity.getAccountType();
             int typeId = accountTypeDao.findId(type);
 
             int userId = entity.getUser().getIdInDb();
             if(userId == 0) {
-                UserDao userDao = new UserDao(logger);
+                UserDao userDao = new UserDao();
                 String email = entity.getUser().getEmail();
                 User user = userDao.findByEmail(email);
                 userId = user.getIdInDb();
@@ -87,17 +83,17 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
                 double rate = resultSet.getDouble(7);
                 double limit = resultSet.getDouble(8);
 
-                AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
+                AccountTypeDao accountTypeDao = new AccountTypeDao();
                 AccountType accountType = accountTypeDao.findById(typeId);
 
-                UserDao userDao = new UserDao(logger);
+                UserDao userDao = new UserDao();
                 User user = userDao.findById(userId);
 
                 NewAccountRequest newAccountRequest = new NewAccountRequest(id, accountType, user, date, isAccepted, isDeclined, rate, limit);
                 requests.add(newAccountRequest);
             }
 
-            logger.log("found " + requests.size() + " requests.");
+            logger.trace("found " + requests.size() + " requests.");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -127,10 +123,10 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
                 double rate = resultSet.getDouble(7);
                 double limit = resultSet.getDouble(8);
 
-                AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
+                AccountTypeDao accountTypeDao = new AccountTypeDao();
                 AccountType accountType = accountTypeDao.findById(typeId);
 
-                UserDao userDao = new UserDao(logger);
+                UserDao userDao = new UserDao();
                 User user = userDao.findById(userId);
 
                 newAccountRequest = new NewAccountRequest(id, accountType, user, date, isAccepted, isDeclined, rate, limit);
@@ -151,13 +147,13 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
 
     @Override
     public boolean update(NewAccountRequest entity) {
-        logger.log("can't change NewAccountRequest");
+        logger.trace("can't change NewAccountRequest");
         return false;
     }
 
     @Override
     public boolean delete(NewAccountRequest entity) {
-        logger.log("can't change and delete NewAccountRequest");
+        logger.trace("can't change and delete NewAccountRequest");
         return false;
     }
 
@@ -179,17 +175,17 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
                 double rate = resultSet.getDouble(7);
                 double limit = resultSet.getDouble(8);
 
-                AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
+                AccountTypeDao accountTypeDao = new AccountTypeDao();
                 AccountType accountType = accountTypeDao.findById(typeId);
 
-                UserDao userDao = new UserDao(logger);
+                UserDao userDao = new UserDao();
                 User user = userDao.findById(userId);
 
                 NewAccountRequest newAccountRequest = new NewAccountRequest(id, accountType, user, date, isAccepted, isDeclined, rate, limit);
                 requests.add(newAccountRequest);
             }
 
-            logger.log("found " + requests.size() + " requests.");
+            logger.trace("found " + requests.size() + " requests.");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -210,12 +206,12 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
         try(Connection connection = ConnectionPool.getConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_FIND_ACCOUNT_REQUEST_BY_TYPE_ID_AND_USER_ID_NOT_CONFIRMED)) {
 
-            AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
+            AccountTypeDao accountTypeDao = new AccountTypeDao();
             int typeId = accountTypeDao.findId(type);
 
             int userId = user.getIdInDb();
             if(userId == 0) {
-                UserDao userDao = new UserDao(logger);
+                UserDao userDao = new UserDao();
                 String email = user.getEmail();
                 User userDb = userDao.findByEmail(email);
                 userId = userDb.getIdInDb();
@@ -291,17 +287,17 @@ public class NewAccountRequestDao implements GenericDao<NewAccountRequest> {
                 double rate = resultSet.getDouble(7);
                 double limit = resultSet.getDouble(8);
 
-                AccountTypeDao accountTypeDao = new AccountTypeDao(logger);
+                AccountTypeDao accountTypeDao = new AccountTypeDao();
                 AccountType accountType = accountTypeDao.findById(typeId);
 
-                UserDao userDao = new UserDao(logger);
+                UserDao userDao = new UserDao();
                 User user = userDao.findById(userId);
 
                 NewAccountRequest newAccountRequest = new NewAccountRequest(id, accountType, user, date, isAccepted, isDeclined, rate, limit);
                 requests.add(newAccountRequest);
             }
 
-            logger.log("found " + requests.size() + " requests.");
+            logger.trace("found " + requests.size() + " requests.");
 
         } catch (SQLException e) {
             e.printStackTrace();

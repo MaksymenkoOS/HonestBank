@@ -2,9 +2,9 @@ package com.sandromax.honestbank.model.dao.impl;
 
 import com.sandromax.honestbank.domain.account.Account;
 import com.sandromax.honestbank.domain.account.Transaction;
-import com.sandromax.honestbank.domain.service.log.Logger;
 import com.sandromax.honestbank.model.dao.GenericDao;
 import com.sandromax.honestbank.model.dao.connection.ConnectionPool;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -12,12 +12,7 @@ import java.util.LinkedList;
 
 public class TransactionDao implements GenericDao<Transaction> {
 
-    //todo Ask: logger
-    public TransactionDao(Logger logger) {
-        this.logger = logger;
-    }
-
-    private Logger logger;
+    private static final Logger logger = Logger.getLogger(TransactionDao.class.getName());
 
     private static final String SQL_CREATE_TRANSACTION = "INSERT INTO transaction (amount, sender_account_id, recipient_account_id) VALUES(?, ?, ?);";
     private static final String SQL_FIND_ALL_TRANSACTIONS = "SELECT * FROM transaction;";
@@ -50,9 +45,10 @@ public class TransactionDao implements GenericDao<Transaction> {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            logger.log("");
+            logger.trace("Can't create new transaction");
         }
 
+        logger.trace("Transaction created with id: " + newGeneratedId);
         return newGeneratedId;
     }
 
@@ -73,7 +69,7 @@ public class TransactionDao implements GenericDao<Transaction> {
                 double amount = resultSet.getDouble(3);
 
                 int senderAccountId = resultSet.getInt(4);
-                AccountDao accountDao = new AccountDao(logger);
+                AccountDao accountDao = new AccountDao();
                 Account senderAccount = accountDao.findById(senderAccountId);
 
                 int recipientAccountId = resultSet.getInt(5);
@@ -94,6 +90,7 @@ public class TransactionDao implements GenericDao<Transaction> {
             }
         }
 
+        logger.trace("Found " + transactions.size() + " transactions");
         return transactions;
     }
 
@@ -116,7 +113,7 @@ public class TransactionDao implements GenericDao<Transaction> {
                 double amount = resultSet.getDouble(3);
 
                 int senderAccountId = resultSet.getInt(4);
-                AccountDao accountDao = new AccountDao(logger);
+                AccountDao accountDao = new AccountDao();
                 Account senderAccount = accountDao.findById(senderAccountId);
 
                 int recipientAccountId = resultSet.getInt(5);
@@ -135,6 +132,7 @@ public class TransactionDao implements GenericDao<Transaction> {
             }
         }
 
+        logger.trace("Found by id: " + id);
         return transaction;
     }
 //    @Override
@@ -156,14 +154,14 @@ public class TransactionDao implements GenericDao<Transaction> {
     //todo Ask: about unused methods from interface
     @Override
     public boolean update(Transaction entity) {
-        logger.log("Method 'TransactionDao.update(Transaction entity)' is not for use. " +
+        logger.warn("Method 'TransactionDao.update(Transaction entity)' is not for use. " +
                 "Transaction cannot be changed.");
         return false;
     }
 
     @Override
     public boolean delete(Transaction entity) {
-        logger.log("Method 'TransactionDao.update(Transaction entity)' is not for use. " +
+        logger.warn("Method 'TransactionDao.update(Transaction entity)' is not for use. " +
                 "Transaction can't delete.");
 
         return false;
@@ -187,7 +185,7 @@ public class TransactionDao implements GenericDao<Transaction> {
                 double amount = resultSet.getDouble(3);
 
                 int senderAccountId = resultSet.getInt(4);
-                AccountDao accountDao = new AccountDao(logger);
+                AccountDao accountDao = new AccountDao();
                 Account senderAccount = accountDao.findById(senderAccountId);
 
                 int recipientAccountId = resultSet.getInt(5);
@@ -200,6 +198,8 @@ public class TransactionDao implements GenericDao<Transaction> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        logger.trace("Found " + transactions.size() + " by account: " + accountId);
         return transactions;
     }
 
