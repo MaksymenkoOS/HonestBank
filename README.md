@@ -19,6 +19,7 @@ Educational web app simulating bank payments
 Наявность установленного MySql Server
 Наявность установленного Apache Tomcat
 Наявность установленного Apache Maven
+
 Инструкция по запуску
 
 Скачать и распаковать архив с проектом или загрузить при помощи клиента Git
