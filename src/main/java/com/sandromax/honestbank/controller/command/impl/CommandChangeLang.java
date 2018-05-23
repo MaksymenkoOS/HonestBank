@@ -16,6 +16,6 @@ public class CommandChangeLang implements Command {
 
         session.setAttribute("lang", lang);
 
-        return Pages.INDEX;
+        return (String) session.getAttribute("current_page");
     }
 }

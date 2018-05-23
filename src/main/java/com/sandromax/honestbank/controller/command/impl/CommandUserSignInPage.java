@@ -5,11 +5,9 @@ import com.sandromax.honestbank.controller.until.constants.Pages;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class CommandTransferPage implements Command {
+public class CommandUserSignInPage implements Command {
     @Override
     public String execute(HttpServletRequest request) {
-        String page = Pages.TRANSFER;
-
-        return page;
+        return Pages.USER_SIGN_IN;
     }
 }
