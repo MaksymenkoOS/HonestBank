@@ -27,3 +27,9 @@
 <li>Создать схему базы данных и необходимые таблицы
 <li>Запустить Apache Tomcat локально (e.g. %TOMCAT_HOME%/bin/startup.bat)
 <li>Запустить приложение из корневой директории (с pom.xml) с командной строки при помощи: mvn tomcat7:deploy или mvn tomcat7: run-war
+
+
+**Technologies Involved**
+Java 8, Tomcat 7, MySQL, 
+Servlets, JSP, JSTL
+BCrypt, 
